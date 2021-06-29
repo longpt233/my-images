@@ -1,0 +1,9 @@
+- các file trong thư mục data-sample sẽ được chuyển tới /opt/hadoop/applications/data-sample
+- not /opt/hadoop-3.2.2
+- cd /opt/hadoop/applications/data-sample
+- thực hiện put data vào hdfs : hdfs dfs -put /opt/hadoop/applications/data-sample/README.md /test-new-file 
+- check data tại http://localhost:9870/explorer.html#/
+- chạy wc $HADOOP_HOME/bin/hadoop jar WordCount.jar WordCount /test-new-file /output 
+- check job http://localhost:8088/cluster/apps/RUNNING
+- check thư mục : hdfs dfs -du / 
+- check output : hdfs dfs -cat /output/part-r-00000
