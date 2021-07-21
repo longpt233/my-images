@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  namenode:
+    image: longpt233/hadoop-spark:v1
+    container_name: hadoop-master   # phai la nhu nay vi no phu thuoc ip mang con ben trong (coresite)
+    ports: 
+      - 8088:8088    # ui yarn
+      - 4040:4040   # ui spark 
+      - 50070:50070 
+    tty: true
+    networks:
+        - cluster-hadoop
+  datanode1:
+    image: longpt233/hadoop-base:v3
+    container_name: hadoop-slave1   # phai tuong ung voi file worker ben trong 
+    tty: true
+    ports: 
+      - 50075:50075
+    networks:
+        - cluster-hadoop
+  datanode2:
+    image: longpt233/hadoop-base:v3
+    container_name: hadoop-slave2 
+    tty: true
+    networks:
+        - cluster-hadoop
+
+networks:
+    cluster-hadoop:
+        driver: bridge
