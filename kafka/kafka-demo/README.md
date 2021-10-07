@@ -2,7 +2,7 @@ Demo producer and consumer Kafka
 
 ## Run programming
 - Step 1: enable kafka 
-> docker-compose up 
+> docker-compose up      
 > docker exec -it kafka-cluster_kafka1_1 bash
 - Step 2: create topic `hello-kafka`
 > kafka-topics --zookeeper zookeeper:2181 --create --topic hello-kafka --partitions 1 --replication-factor 1
