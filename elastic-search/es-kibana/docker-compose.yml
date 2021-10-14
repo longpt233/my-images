@@ -3,13 +3,13 @@ version: '3'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.0.1
-    container_name: elasticsearch
+    container_name: elasticsearch-kibana
     environment:
-      - node.name=elasticsearch
+      - node.name=elasticsearch-kibana
       - cluster.name=datasearch
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - cluster.initial_master_nodes=elasticsearch
+      - cluster.initial_master_nodes=elasticsearch-kibana
     ulimits:
       memlock:
         soft: -1
@@ -17,7 +17,7 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - ./data:/usr/share/elasticsearch/data
+      - ./data:/usr/share/elasticsearch-kibana/data
     networks:
       - elastic
 
@@ -25,11 +25,11 @@ services:
     image: docker.elastic.co/kibana/kibana:7.0.1
     restart: always
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200    # address of elasticsearch docker container which kibana will connect
+      - ELASTICSEARCH_HOSTS=http://elasticsearch-kibana:9200    # address of elasticsearch docker container which kibana will connect
     ports:
       - 5601:5601
     depends_on:
-      - elasticsearch    
+      - elasticsearch
     networks:
       - elastic 
 
