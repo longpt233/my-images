@@ -3,3 +3,4 @@
 *.st
 .idea
 .class
+mongodb/data
