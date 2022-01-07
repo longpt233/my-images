@@ -3,7 +3,6 @@
 ## Description
 - spark base to test submit job 
 
-
 ## How to run 
 ```bash
 docker-compose build
@@ -12,7 +11,8 @@ docker-compose up
 
 - attach 
 ```bash
-
+docker exec -it spark-master-name bash
+spark-shell
 ```
 
 ## Structure 
@@ -20,14 +20,6 @@ docker-compose up
 ```
 001_hadoop
 │   README.md
-│
-└───config
-│   │   
-│   └───
-|
 └───Dockerfile
+└───docker-compose.yml
 ```
-
-
-## author 
-- https://github.com/kiwenlau/hadoop-cluster-docker

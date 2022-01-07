@@ -1,1 +1,0 @@
-docker run -it -p 9000:9000 -p 8088:8088 -p 8032:8032 -p 9870:9870 --hostname hadoop-master --mount type=bind,src=/mnt/4E9A200D9A1FF067/University/20202/GR/data/hadoop/name,dst=/dfs/name hadoop /bin/bash
