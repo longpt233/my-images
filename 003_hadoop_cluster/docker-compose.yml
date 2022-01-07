@@ -11,22 +11,20 @@ services:
       - "8088:8088"    # YARN 
     networks:
       - cluster-network
-  hadoop-slave1:
+
+  hadoop-slave1:  
     image: longpt233/hadoop-:2.0.0
     build: 
         context: .
-    container_name: hadoop-slave1-name
-    ports:
-      - "80:80"
+    container_name: hadoop-slave1-name 
     networks:
       - cluster-network
+
   hadoop-slave2:
     image: longpt233/hadoop-:2.0.0
     build: 
         context: .
-    container_name: hadoop-slave2-name
-    ports:
-      - "80:80"
+    container_name: hadoop-slave2-name 
     networks:
       - cluster-network
 

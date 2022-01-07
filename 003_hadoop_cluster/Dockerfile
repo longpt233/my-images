@@ -1,13 +1,27 @@
-FROM longpt233/hadoop-base:2.0.0
-
-WORKDIR /root
+FROM longpt233/ubuntu-base:2.0.0
 
 
-# set environment variable
-ENV JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64 
+ARG HADOOP_VERSION=3.2.2
+ARG HADOOP_TAR=hadoop-$HADOOP_VERSION.tar.gz
+ARG HADOOP_URL="https://mirror.downloadvn.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/${HADOOP_TAR}"
+
+LABEL Description="Hadoop Dev" \
+    "Hadoop Version"="$HADOOP_VERSION"
+
+WORKDIR /
+
+USER root
+
+# install hadoop
+RUN set -x \
+    && curl -fSL "$HADOOP_URL" -o /tmp/${HADOOP_TAR} \
+    && tar -xvf /tmp/${HADOOP_TAR} \
+    && mv /hadoop-${HADOOP_VERSION} /usr/local/hadoop \
+    && rm /tmp/${HADOOP_TAR}
+
+# set environment variable 
 ENV HADOOP_HOME=/usr/local/hadoop 
 ENV PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin 
-
 
 RUN mkdir -p ~/hdfs/namenode && \ 
     mkdir -p ~/hdfs/datanode && \

@@ -12,8 +12,18 @@ docker-compose up
 
 - attach 
 ```bash
-
+docker exec -it hadoop-name bash
 ```
+
+- check 
+```bash
+jps
+```
+
+# How to use 
+- co gi tu cop file vao ma test nha 
+- view o http://localhost:9870
+
 
 ## Structure 
 

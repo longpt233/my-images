@@ -16,11 +16,15 @@ USER root
 RUN set -x \
     && curl -fSL "$HADOOP_URL" -o /tmp/${HADOOP_TAR} \
     && tar -xvf /tmp/${HADOOP_TAR} 
-RUN mv /tmp/hadoop-${HADOOP_VERSION} /usr/local/hadoop \
+RUN mv /hadoop-${HADOOP_VERSION} /usr/local/hadoop \
     && rm /tmp/${HADOOP_TAR}
 
 ENV HADOOP_HOME=/usr/local/hadoop 
 ENV PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin 
+
+ENV HDFS_NAMENODE_USER=root
+ENV HDFS_DATANODE_USER=root
+ENV HDFS_SECONDARYNAMENODE_USER=root
 
 RUN mkdir -p ~/hdfs/namenode && \ 
     mkdir -p ~/hdfs/datanode && \
@@ -28,15 +32,18 @@ RUN mkdir -p ~/hdfs/namenode && \
 
 COPY conf/* /tmp/
 
-RUN mv /tmp/hadoop-env.sh $HADOOP_HOME/etc/hadoop/hadoop-env.sh && \
-    mv /tmp/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml && \ 
-    mv /tmp/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml && 
+RUN mv /tmp/hadoop-env.sh $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
+    && mv /tmp/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml \
+    && mv /tmp/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 
-EXPOSE  50070 50075 9000
+EXPOSE  50070 50075 8042 8088 9000 9870 8020 8485 22
 
 ADD entrypoint.sh /entrypoint.sh
-
 RUN chmod a+x /entrypoint.sh
-RUN $HADOOP_HOME/bin/hdfs namenode -format
+
+# chay cho lan dau tien thoi 
+RUN $HADOOP_HOME/bin/hdfs namenode -format  
 
 ENTRYPOINT [ "/entrypoint.sh" ]
+
+CMD [ "sh", "-c", "service ssh start; bash"]
