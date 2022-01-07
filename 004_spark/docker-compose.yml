@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  spark-master:
+    image: longpt233/spark-base:2.0.0
+    build: 
+        context: .
+    container_name: spark-master-name
+    ports:
+      - "4040:4040"  

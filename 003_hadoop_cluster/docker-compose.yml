@@ -2,18 +2,20 @@ version: "3"
 
 services:
   hadoop-master:
-    image: longpt233/hadoop-:2.0.0
+    image: longpt233/hadoop-cluster:2.0.0
     build: 
         context: .
     container_name: hadoop-master-name
     ports:
       - "50070:50070"  # doc file 
       - "8088:8088"    # YARN 
+      - "9870:9870"   # for 3x 
+    # command: sh -c "$HADOOP_HOME/sbin/start-all.sh"
     networks:
       - cluster-network
 
   hadoop-slave1:  
-    image: longpt233/hadoop-:2.0.0
+    image: longpt233/hadoop-cluster:2.0.0
     build: 
         context: .
     container_name: hadoop-slave1-name 
@@ -21,7 +23,7 @@ services:
       - cluster-network
 
   hadoop-slave2:
-    image: longpt233/hadoop-:2.0.0
+    image: longpt233/hadoop-cluster:2.0.0
     build: 
         context: .
     container_name: hadoop-slave2-name 

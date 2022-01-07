@@ -27,7 +27,13 @@ RUN mkdir -p ~/hdfs/namenode && \
     mkdir -p ~/hdfs/datanode && \
     mkdir $HADOOP_HOME/logs
 
-COPY config/* /tmp/
+ENV YARN_RESOURCEMANAGER_USER=root
+ENV YARN_NODEMANAGER_USER=root
+ENV HDFS_NAMENODE_USER=root
+ENV HDFS_DATANODE_USER=root
+ENV HDFS_SECONDARYNAMENODE_USER=root
+
+COPY conf/* /tmp/
 
 RUN mv /tmp/ssh_config ~/.ssh/config && \
     mv /tmp/hadoop-env.sh /usr/local/hadoop/etc/hadoop/hadoop-env.sh && \
@@ -35,17 +41,18 @@ RUN mv /tmp/ssh_config ~/.ssh/config && \
     mv /tmp/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml && \
     mv /tmp/mapred-site.xml $HADOOP_HOME/etc/hadoop/mapred-site.xml && \
     mv /tmp/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml && \
-    mv /tmp/slaves $HADOOP_HOME/etc/hadoop/slaves && \
-    mv /tmp/start-hadoop.sh ~/start-hadoop.sh && \
-    mv /tmp/run-wordcount.sh ~/run-wordcount.sh
+    mv /tmp/slaves $HADOOP_HOME/etc/hadoop/slaves &&\
+    mv /tmp/workers $HADOOP_HOME/etc/hadoop/workers 
 
-RUN chmod +x ~/start-hadoop.sh && \
-    chmod +x ~/run-wordcount.sh && \
-    chmod +x $HADOOP_HOME/sbin/start-dfs.sh && \
-    chmod +x $HADOOP_HOME/sbin/start-yarn.sh 
 
 # format namenode
 RUN /usr/local/hadoop/bin/hdfs namenode -format
+
+EXPOSE  50070 50075 8042 8088 9000 9870 8020 8485 22
+
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh 
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 CMD [ "sh", "-c", "service ssh start; bash"]
 

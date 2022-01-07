@@ -7,11 +7,13 @@
 ## How to run 
 ```bash
 docker-compose build
-docker-compose up
+docker-compose up 
 ```
 
-- attach 
+- attach vao xong bat cac dich vu
 ```bash
+docker exec -it hadoop-master-name bash
+start-all.sh
 
 ```
 
@@ -21,7 +23,7 @@ docker-compose up
 001_hadoop
 │   README.md
 │
-└───config
+└───conf
 │   │   
 │   └───
 |
