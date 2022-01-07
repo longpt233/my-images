@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  hadoop:
+    image: longpt233/ubuntu-base:2.0.0
+    build: 
+        context: .
+    container_name: ubuntu-name

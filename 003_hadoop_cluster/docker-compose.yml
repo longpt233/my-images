@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  hadoop-master:
+    image: longpt233/hadoop-:2.0.0
+    build: 
+        context: .
+    container_name: hadoop-master-name
+    ports:
+      - "50070:50070"  # doc file 
+      - "8088:8088"    # YARN 
+    networks:
+      - cluster-network
+  hadoop-slave1:
+    image: longpt233/hadoop-:2.0.0
+    build: 
+        context: .
+    container_name: hadoop-slave1-name
+    ports:
+      - "80:80"
+    networks:
+      - cluster-network
+  hadoop-slave2:
+    image: longpt233/hadoop-:2.0.0
+    build: 
+        context: .
+    container_name: hadoop-slave2-name
+    ports:
+      - "80:80"
+    networks:
+      - cluster-network
+
+
+networks:
+    cluster-network:
+        driver: bridge  

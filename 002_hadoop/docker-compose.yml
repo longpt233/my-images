@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  hadoop:
+    image: longpt233/hadoop-base:2.0.0
+    build: 
+        context: .
+    container_name: hadoop-name
+    ports:
+      - 9000:9000   # data
+      - 50070:50070 # datanode
+      - 50075:50075 # namenode 
+    # volumes:
+    #   - ./dfs/name:/dfs/name
+    #   - ./dfs/data:/dfs/data
