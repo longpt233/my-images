@@ -1,4 +1,5 @@
-# hadoop-base:v3 
+# docker build -t longpt233/hadoop-base:2.0.0 .
+# docker push longpt233/hadoop-base:2.0.0
 
 FROM ubuntu:18.04
 

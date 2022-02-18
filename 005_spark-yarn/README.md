@@ -1,18 +1,11 @@
+# run 
 
+- attach vô master 
 
-# build
-sudo docker build -t longpt233/hadoop-base:v3 .
+```
+docker exec -it hadoop-master bash    
+namenode -format
+start-all.sh  
+```
+- nhớ format trc khi run không thì có thể k chạy datanode
 
-# yarn 
-$HADOOP_HOME/sbin/start-yarn.sh
-
-#dfs 
-$HADOOP_HOME/sbin/start-dfs.sh
-
-# format 
-/usr/local/hadoop/bin/hdfs namenode -format
-
-# home 
-$HADOOP_HOME=/usr/local/hadoop 
-
-# attach 

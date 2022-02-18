@@ -2,30 +2,39 @@ version: "3"
 
 services:
   namenode:
-    image: longpt233/hadoop-spark:v1
-    container_name: hadoop-master   # phai la nhu nay vi no phu thuoc ip mang con ben trong (coresite)
+    image: longpt233/hadoop-spark:2.0.0
+    container_name: hadoop-master   # = host name = core-site 
     ports: 
       - 8088:8088    # ui yarn
       - 4040:4040   # ui spark 
-      - 50070:50070 
+      - 9870:9870   # ui name node  
     tty: true
     networks:
-        - cluster-hadoop
+        cluster-hadoop:
+          ipv4_address: 172.25.0.2
+
   datanode1:
-    image: longpt233/hadoop-base:v3
+    image: longpt233/hadoop-base:2.0.0
     container_name: hadoop-slave1   # phai tuong ung voi file worker ben trong 
     tty: true
-    ports: 
-      - 50075:50075
+    ports:  
+      - 9864:9864
     networks:
-        - cluster-hadoop
+        cluster-hadoop:
+          ipv4_address: 172.25.0.3
+
   datanode2:
-    image: longpt233/hadoop-base:v3
+    image: longpt233/hadoop-base:2.0.0
     container_name: hadoop-slave2 
     tty: true
     networks:
-        - cluster-hadoop
+        cluster-hadoop:
+          ipv4_address: 172.25.0.4
 
 networks:
     cluster-hadoop:
         driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.25.0.0/16

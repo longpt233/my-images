@@ -1,6 +1,7 @@
-# hadoop-spark:v1
+# docker build -t longpt233/hadoop-spark:2.0.0 .
+# docker push longpt233/hadoop-spark:2.0.0
 
-FROM longpt233/hadoop-base:v3 
+FROM longpt233/hadoop-base:2.0.0
 
 ARG SPARK_VERSION=3.1.2
 ENV HADOOP_VERSION=3.2
