@@ -4,6 +4,7 @@ services:
   jobmanager:
     image: flink:1.14.3-scala_2.12-java8
     hostname: jobmanager-container-host
+    container_name: jobmanager-name 
     ports:
       - "8081:8081"
     command: jobmanager
@@ -19,6 +20,7 @@ services:
 
   taskmanager:
     image: flink:1.14.3-scala_2.12-java8
+    container_name: taskmanager-name 
     depends_on:
       - jobmanager
     command: taskmanager 
@@ -32,46 +34,6 @@ services:
     networks:
       cluster-flink:
         ipv4_address: 172.25.0.8
-
-  zookeeper:
-    image: zookeeper:3.4.9
-    container_name: zookeeper-name 
-    hostname: zookeeper-host
-    ports:
-      - "2181:2181"
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_PORT: 2181
-      ZOO_SERVERS: server.1=zookeeper-host:2888:3888
-    volumes:
-      - ./data-docker/zoo/data:/data
-      - ./data-docker/zoo/datalog:/datalog
-    networks:
-      cluster-flink:
-        ipv4_address: 172.25.0.3
-
-  kafka:
-    image: confluentinc/cp-kafka:5.3.0
-    container_name: kafka-name
-    hostname: kafka-host
-    ports:
-      - 9092:9092
-      - 19092:19092
-      - 29092:29092
-    environment: 
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka-host:19092,LISTENER_DOCKER_EXTERNAL://kafka-host:9092, OUTSIDE://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT, OUTSIDE:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper-host:2181"
-      KAFKA_BROKER_ID: 1
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
-    volumes:
-      - ./data-docker/kafka/data:/var/lib/kafka/data
-    networks:
-      cluster-flink:
-        ipv4_address: 172.25.0.4
 
 networks:
   cluster-flink:

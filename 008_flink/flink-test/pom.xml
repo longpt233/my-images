@@ -49,7 +49,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fully.qualified.MainClass</mainClass>
+                            <mainClass>com.company.team.main.BatchJob</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
