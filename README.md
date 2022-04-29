@@ -1,8 +1,8 @@
 # My-Images
 collection of image docker 
 
-# code 
+# Code 
 
-> 0xx : bigdata   
-> 1xx : database   
-> 2xx : other   
+- 0xx : bigdata   
+- 1xx : database   
+- 2xx : other   
