@@ -49,7 +49,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.company.team.main.BatchJob</mainClass>
+                            <mainClass>com.company.team.main.WikipediaAnalysis</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

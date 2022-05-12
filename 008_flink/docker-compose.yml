@@ -1,7 +1,7 @@
 version: "3"
 services:
 
-  jobmanager:
+  jobmanager:   # job > task
     image: flink:1.14.3-scala_2.12-java8
     hostname: jobmanager-container-host
     container_name: jobmanager-name 
@@ -12,33 +12,15 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager-container-host
-    volumes: 
-      - ./data/:/data
-    networks:
-        cluster-flink:
-          ipv4_address: 172.25.0.7
 
   taskmanager:
     image: flink:1.14.3-scala_2.12-java8
     container_name: taskmanager-name 
     depends_on:
       - jobmanager
-    command: taskmanager 
+    command: taskmanager
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager-container-host
         taskmanager.numberOfTaskSlots: 10
-    volumes: 
-      - ./data/:/data
-    networks:
-      cluster-flink:
-        ipv4_address: 172.25.0.8
-
-networks:
-  cluster-flink:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.25.0.0/16
