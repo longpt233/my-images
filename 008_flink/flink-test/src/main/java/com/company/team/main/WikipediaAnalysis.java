@@ -33,7 +33,7 @@ public class WikipediaAnalysis {
                 .keyBy((KeySelector<WikipediaEditEvent, String>) WikipediaEditEvent::getUser);
 
         DataStream<Tuple2<String, Long>> result = keyedEdits
-                .window(TumblingProcessingTimeWindows.of(Time.seconds(10)))
+                .window(TumblingProcessingTimeWindows.of(Time.seconds(20)))
                 .aggregate(new AggregateFunction<WikipediaEditEvent, Tuple2<String, Long> , Tuple2<String, Long>>() {
                     @Override
                     public Tuple2<String, Long> createAccumulator() {
@@ -42,11 +42,19 @@ public class WikipediaAnalysis {
 
                     @Override
                     public Tuple2<String, Long> add(WikipediaEditEvent value, Tuple2<String, Long> accumulator) {
-                        String log = String.format("%s\t%40s\t%d",value.getTimestamp(),value.getUser(),value.getByteDiff());
+                        String log = String.format("%s\t%40s\t%8d\t%s",value.getTimestamp(),value.getUser(),value.getByteDiff(),accumulator);
                         System.out.println(log);
+
+//                        if(accumulator._1.equals(value.getUser())) {
+//                            Long totalDiff = value.getByteDiff() + accumulator._2;
+//                            return new Tuple2<>(value.getUser(), totalDiff);
+//                        }else {
+//                            return new Tuple2<>(value.getUser(), (long)value.getByteDiff());
+//                        }
+
                         Long totalDiff = value.getByteDiff() + accumulator._2;
-                        Tuple2<String, Long> acc = new Tuple2<>(value.getUser(), totalDiff);
-                        return acc;
+                        return new Tuple2<>(value.getUser(), totalDiff);
+
                     }
 
                     @Override
@@ -56,9 +64,11 @@ public class WikipediaAnalysis {
                     }
 
                     @Override
-                    public Tuple2<String, Long> merge(Tuple2<String, Long> acc1, Tuple2<String, Long> acc2) {
-                        return new Tuple2<>(acc1._1, acc1._2 + acc2._2);
+                    public Tuple2<String, Long> merge(Tuple2<String, Long> stringLongTuple2, Tuple2<String, Long> acc1) {
+                        return null;
                     }
+
+
                 });
 
         env.execute();
