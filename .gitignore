@@ -8,3 +8,5 @@ mongodb/data
 
 *target
 *data-docker
+.vscode
+201_kafka/data
