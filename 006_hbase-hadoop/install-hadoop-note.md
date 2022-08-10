@@ -71,7 +71,7 @@ sudo apt-get install openjdk-8-jdk
 nano ~/hadoop/etc/hadoop/hadoop-env.sh
 export JAVA_HOME=${JAVA_HOME}
 or 
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre`
 ```
 
 - master

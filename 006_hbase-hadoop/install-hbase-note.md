@@ -139,3 +139,15 @@ ERROR: org.apache.hadoop.hbase.ipc.ServerNotRunningYetException: Server is not r
 </property>
 
 ```
+
+## ui 
+
+- http://10.3.107.203:16010/master-status#storeStats
+
+## ref
+
+- https://www.unixmen.com/configure-distributed-hbase-cluster-on-centos-linux-7/
+- https://www.tutorialspoint.com/hbase/hbase_installation.htm
+- https://www.guru99.com/hbase-installation-guide.html
+- https://stackoverflow.com/questions/29397659/hbase-installation-in-three-node-hadoop-cluster
+- https://www.guru99.com/hbase-architecture-data-flow-usecases.html
