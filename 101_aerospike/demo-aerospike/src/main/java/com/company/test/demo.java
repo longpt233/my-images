@@ -1,3 +1,5 @@
+package com.company.test;
+
 import com.aerospike.client.*;
 import com.aerospike.client.policy.ClientPolicy;
 import com.aerospike.client.policy.Policy;
