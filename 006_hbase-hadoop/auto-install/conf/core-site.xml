@@ -3,6 +3,6 @@
 <configuration>
     <property>
         <name>fs.default.name</name>
-        <value>hdfs://10.3.107.203:9000</value>
+        <value>hdfs://10.5.92.76:9000</value>
     </property>
 </configuration>

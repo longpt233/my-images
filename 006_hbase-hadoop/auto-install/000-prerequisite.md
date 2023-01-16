@@ -6,6 +6,13 @@
 2. chuyển lên server 
 
 ```
-rsync -avPz -e "ssh -p 2395" ./auto-install longpt@10.5.0.242:tmp
-rsync -avPz -e "ssh -p 2395" ./auto-install longpt@10.3.107.203:
+~/gw-send ./auto-install longpt@10.5.0.242:tmp
+rsync -avPz -e "ssh -p 2395" ./auto-install longpt@10.5.92.76:/home/longpt
+```
+
+3. check các điều kiện
+
+```
+có jdk : 
+cd /usr/lib/jvm/java-8-openjdk-amd64/jre
 ```
