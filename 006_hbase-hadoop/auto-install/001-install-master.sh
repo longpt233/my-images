@@ -8,7 +8,7 @@ export HADOOP_VER=2.7.0
 
 # dir install
 dir=/home/longpt
-echo "current dir:"${dir}
+echo "dir install:"${dir}
 wget https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VER}/hadoop-${HADOOP_VER}.tar.gz
 tar -xzf hadoop-${HADOOP_VER}.tar.gz
 mv hadoop-${HADOOP_VER} ${dir}/hadoop
@@ -20,6 +20,7 @@ export HADOOP_SSH_OPTS="-p 2395"
 
 echo export HADOOP_HOME"="/home/longpt/hadoop>>~/.profile
 echo export HADOOP_SSH_OPTS="\"-p 2395\"" >> ~/.profile
+echo export HADOOP_VER=2.7.0>>~/.profile
 
 source ~/.profile
 
@@ -35,11 +36,3 @@ cp ./conf/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml
 cp ./conf/workers $HADOOP_HOME/etc/hadoop/workers
 cp ./conf/slaves $HADOOP_HOME/etc/hadoop/slaves
 
-# scp hadoop-*.tar.gz 10.3.105.61:
-# scp hadoop-*.tar.gz 10.3.105.185:
-
-# ssh -p 2395 longpt@10.3.105.185
-# ssh -p 2395 longpt@10.3.105.61
-
-# tar -xzf hadoop-*
-# mv hadoop-2.7.0 hadoop

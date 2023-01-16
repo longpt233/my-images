@@ -19,12 +19,12 @@
 <configuration>
     <property>
             <name>dfs.namenode.name.dir</name>
-            <value>/home/longpt/data/nameNode</value>
+            <value>/data/longpt-hadoop/nameNode</value>
     </property>
 
     <property>
             <name>dfs.datanode.data.dir</name>
-            <value>/home/longpt/data/dataNode</value>
+            <value>/data/longpt-hadoop/dataNode</value>
     </property>
 
     <property>
