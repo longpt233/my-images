@@ -115,7 +115,15 @@ hdfs@cluster-172-25-0-2:~$ /usr/local/hadoop/bin/hdfs --daemon start namenode
 hdfs@cluster-172-25-0-2:~$ tail -n 100 /usr/local/hadoop/logs/hadoop-hdfs-datanode-cluster-172-25-0-2.log 
 
 
-hdfs@cluster-172-25-0-2:~$ /usr/local/hadoop/bin/hdfs --daemon start namenode
+```
+
+
+```
+datanode 
+
+
+hdfs@cluster-172-25-0-4:~$ /usr/local/hadoop/bin/hdfs --daemon start datanode
+# k cai 
 
 wget https://dlcdn.apache.org//commons/daemon/source/commons-daemon-1.3.4-src.tar.gz
 tar -xvzf commons-daemon-1.3.4-src.tar.gz 
@@ -125,16 +133,20 @@ cd commons-daemon-1.3.4-src/src/native/unix/
 make
 sudo apt-get install build-essential (neu khogn co make)
 
-
-```
-
-
-```
-datanode 
-
 root@cluster-172-25-0-4:/# /usr/local/hadoop/sbin/hadoop-daemon.sh start datanode
 WARNING: Use of this script to start HDFS daemons is deprecated.
 WARNING: Attempting to execute replacement "hdfs --daemon start" instead.
+ERROR: Cannot set priority of datanode process 224
+# co loi nhung van cahy dc ao 
+
+root@cluster-172-25-0-3:~# jps
+1521 Secur
+1595 Jps
+
+cat /data/log/privileged-root-datanode-cluster-172-25-0-3.err 
+java.io.FileNotFoundException: /data/log/hadoop-hdfs-root-datanode-cluster-172-25-0-3.log (Permission denied)
+chown -R hdfs: /data/log/
+
 
 # chay voi jsvc thi cac cai /data/dn nay quyen la hdfs, ps aux
 root@cluster-172-25-0-4:/# ll /data/
@@ -143,5 +155,38 @@ drwxr-xr-x 4 hdfs hadoop 4096 Mar  7 13:50 ./
 drwxr-xr-x 1 root root   4096 Mar  7 13:50 ../
 drwxr-xr-x 3 root root   4096 Mar  7 11:54 commons-daemon-1.3.4-src/
 drwx------ 2 hdfs hadoop 4096 Mar  7 13:49 dn/
+
+
+root@cluster-172-25-0-4:/# ps ux                                             
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0  18388  3100 pts/0    Ss+  11:24   0:00 /bin/bash /entrypoint.sh
+root          31  0.0  0.0  72308  3324 ?        Ss   11:24   0:00 /usr/sbin/sshd
+root          33  0.0  0.0   4580   764 pts/0    S+   11:24   0:00 tail -f /dev/null
+root          40  0.0  0.0  18648  3560 pts/1    Ss   11:32   0:00 bash
+root        3599  0.0  0.0  17272  2164 pts/1    S    14:17   0:00 jsvc.exec -Dproc_datanode
+
+
+hdfs@cluster-172-25-0-4:~$ ps ux
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+hdfs        3609  4.7  0.8 10209964 293012 pts/1 Sl   14:17   0:04 jsvc.exec -Dproc_datanode -outfile /data/log//hadoop-hdfs-root-datanode-cluster-172-25-0-4.out
+
+export HADOOP_LOG_DIR="/data/log"
+# k set cai nay log nhay di linh tinh kho chiu vl ?
+
+```
+
+
+# test secure 
+
+```
+hdfs@cluster-172-25-0-4:~$ /usr/local/hadoop/bin/hdfs dfs -ls /
+# loi 
+
+hdfs@cluster-172-25-0-4:~$ KRB5_TRACE=/dev/stdout kinit  -k -t /hdfs.keytab namenode/cluster-172-25-0-2@LONGPT.REALM
+hdfs@cluster-172-25-0-4:~$ /usr/local/hadoop/bin/hdfs dfs -mkdir /data 
+hdfs@cluster-172-25-0-4:~$ /usr/local/hadoop/bin/hdfs dfs -ls /  
+Found 1 items
+drwxr-xr-x   - hdfs supergroup          0 2024-03-07 14:37 /data
+
 
 ```

@@ -32,18 +32,19 @@
         </property>
 
 
-        <!-- namenode -->
+        <!-- namenode : cho nay ma de 0.0.0.0 la tach -->
+
         <property>
                 <name>dfs.namenode.http-address</name>
-                <value>0.0.0.0:9970</value>
+                <value>cluster-172-25-0-2:9970</value>
         </property>
         <property>
                 <name>dfs.namenode.https-address</name>
-                <value>0.0.0.0:9971</value>
+                <value>cluster-172-25-0-2:9971</value>
         </property>
         <property>
                 <name>dfs.namenode.rpc-address</name>
-                <value>0.0.0.0:8120</value>
+                <value>cluster-172-25-0-2:8120</value>
         </property>
 
         <!-- datanode -->
@@ -126,5 +127,5 @@
                 <name>dfs.webhdfs.enabled</name>
                 <value>true</value>
         </property>
-        
+
 </configuration>
