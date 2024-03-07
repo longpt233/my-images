@@ -21,12 +21,12 @@ public class Main {
     public static void main(String[] args) {
 
         JanusGraphFactory.Builder config = JanusGraphFactory.build();
-        config.set("storage.backend", "hbase");
-        config.set("storage.port", 2181);
-        config.set("storage.hostname", Arrays.asList("192.168.23.37","192.168.23.39","192.168.23.41"));
-        config.set("storage.hbase.table", "longpt_test_composite_index");
+//        config.set("storage.backend", "hbase");
+//        config.set("storage.port", 2181);
+//        config.set("storage.hostname", Arrays.asList("192.168.23.37","192.168.23.39","192.168.23.41"));
+//        config.set("storage.hbase.table", "longpt_test_composite_index");
 
-//        config.set("storage.backend", "inmemory");
+        config.set("storage.backend", "inmemory");
 
         JanusGraph graph = config.open();
 

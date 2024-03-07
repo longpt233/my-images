@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://172.25.0.2:8120</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/data/tmp/</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authorization</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.auth_to_local</name>
+        <value>
+            RULE:[2:$1/$2@$0](datanode/.*@LONGPT.REALM)s/.*/hdfs/
+            RULE:[2:$1/$2@$0](namenode/.*@LONGPT.REALM)s/.*/hdfs/
+            RULE:[2:$1;$2@$0]([a-z0-9]*;platform@LONGPT.REALM)s/;platform@LONGPT.REALM//
+        </value>
+        <description>The mapping from Kerberos principal names to local OS user names.</description>
+    </property>
+
+    <property>
+        <name>hadoop.http.authentication.type</name>
+        <value>kerberos</value>
+    </property>
+    <property>
+        <name>ipc.client.fallback-to-simple-auth-allowed</name>
+        <value>true</value>
+    </property>
+    <property>
+            <name>hadoop.http.authentication.kerberos.keytab</name>
+            <value>/http.keytab</value>
+    </property>
+    <property>
+            <name>hadoop.http.authentication.kerberos.principal</name>
+            <value>HTTP/_HOST@LONGPT.REALM</value>
+    </property>
+
+
+</configuration>

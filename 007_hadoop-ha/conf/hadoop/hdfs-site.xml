@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+        <property>
+                <name>dfs.namenode.name.dir</name>
+                <value>file:/data/nn</value>
+        </property>
+        <property>
+                <name>dfs.datanode.data.dir</name>
+                <value>file:/data/dn</value>
+        </property>
+
+        <property>
+                <name>dfs.replication</name>
+                <value>2</value>
+        </property>
+
+
+        <!-- namenode -->
+        <property>
+                <name>dfs.namenode.http-address</name>
+                <value>0.0.0.0:9970</value>
+        </property>
+        <property>
+                <name>dfs.namenode.https-address</name>
+                <value>0.0.0.0:9971</value>
+        </property>
+        <property>
+                <name>dfs.namenode.rpc-address</name>
+                <value>0.0.0.0:8120</value>
+        </property>
+
+        <!-- datanode -->
+        <property>
+                <name>dfs.datanode.http.address</name>
+                <value>0.0.0.0:964</value>
+        </property>
+        <property>
+                <name>dfs.datanode.address</name>
+                <value>0.0.0.0:966</value>
+        </property>
+        <property>
+                <name>datanode.https.port</name>
+                <value>50575</value>
+        </property>
+
+        <!-- k co cai nay loi namenode -->
+        <property>
+                <name>dfs.block.access.token.enable</name>
+                <value>true</value>
+        </property>
+        
+
+        <!-- <property>
+                <name>dfs.nameservices</name>
+                <value>hadoop3ltn</value>
+        </property>
+        <property>
+                <name>dfs.namenode.rpc-address.hadoop3ltn</name>
+                <value>0.0.0.0:8120</value>
+        </property> -->
+
+
+        <!--security-->
+        <property>
+                <name>dfs.namenode.kerberos.principal</name>
+                <value>namenode/_HOST@LONGPT.REALM</value>
+        </property>
+        <property>
+                <name>dfs.namenode.keytab.file</name>
+                <value>/hdfs.keytab</value>
+        </property>
+        <property>
+                <name>dfs.datanode.kerberos.principal</name>
+                <value>datanode/_HOST@LONGPT.REALM</value>
+        </property>
+        <property>
+                <name>dfs.datanode.keytab.file</name>
+                <value>/hdfs.keytab</value>
+        </property>
+
+
+        <!-- Caused by: javax.servlet.ServletException: javax.servlet.ServletException: Principal not defined in configuration-->
+        <property>
+                <name>dfs.web.authentication.kerberos.principal</name>
+                <value>HTTP/_HOST@LONGPT.REALM</value>
+        </property>
+
+        <property>
+                <name>dfs.web.authentication.kerberos.keytab</name>
+                <value>/http.keytab</value>
+        </property>
+
+
+        <!-- <property>
+                <name>dfs.namenode.kerberos.internal.spnego.principal</name>
+                <value>HTTP/_HOST@LONGPT.REALM</value>
+        </property> -->
+
+        <property>
+                <name>dfs.encrypt.data.transfer</name>
+                <value>true</value>
+        </property>
+        <property>
+                <name>dfs.encrypt.data.transfer.algorithm</name>
+                <value>rc4</value>
+        </property>
+
+        <property>
+                <name>dfs.webhdfs.enabled</name>
+                <value>true</value>
+        </property>
+        
+</configuration>

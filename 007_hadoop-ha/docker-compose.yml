@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  namenode:
+    image: longpt233/hadoop-ha:1.0.2
+    container_name: namenode_name   # = host name = core-site 
+    hostname: cluster-172-25-0-2
+    ports: 
+      - 9970:9970   # ui name node  
+    tty: true
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.0.2
+
+  datanode1:
+    image: longpt233/hadoop-ha:1.0.2
+    container_name: datanode1_name 
+    hostname: cluster-172-25-0-3     # no dien cai nayf vao file /etc/hosts
+    tty: true
+    ports:  
+      - 9864:9864
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.0.3
+
+  datanode2:
+    image: longpt233/hadoop-ha:1.0.2
+    container_name: datanode2_name 
+    hostname: cluster-172-25-0-4
+    tty: true
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.0.4
+
+networks:
+    cluster-hadoop:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.25.0.0/16
