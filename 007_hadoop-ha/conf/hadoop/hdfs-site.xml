@@ -34,7 +34,7 @@
 
         <!-- namenode : cho nay ma de 0.0.0.0 la tach -->
 
-        <property>
+        <!-- <property>
                 <name>dfs.namenode.http-address</name>
                 <value>cluster-172-25-0-2:9970</value>
         </property>
@@ -45,7 +45,7 @@
         <property>
                 <name>dfs.namenode.rpc-address</name>
                 <value>cluster-172-25-0-2:8120</value>
-        </property>
+        </property> -->
 
         <!-- datanode -->
         <property>
@@ -66,16 +66,7 @@
                 <name>dfs.block.access.token.enable</name>
                 <value>true</value>
         </property>
-        
 
-        <!-- <property>
-                <name>dfs.nameservices</name>
-                <value>hadoop3ltn</value>
-        </property>
-        <property>
-                <name>dfs.namenode.rpc-address.hadoop3ltn</name>
-                <value>0.0.0.0:8120</value>
-        </property> -->
 
 
         <!--security-->
@@ -113,6 +104,105 @@
                 <name>dfs.namenode.kerberos.internal.spnego.principal</name>
                 <value>HTTP/_HOST@LONGPT.REALM</value>
         </property> -->
+
+
+        <!--HA-->
+
+        <property>
+                <name>dfs.nameservices</name>
+                <value>mycluster</value>
+        </property>
+
+        <property>
+                <name>dfs.ha.namenodes.mycluster</name>
+                <value>nn1,nn2</value>
+        </property>
+
+        <property>
+                <name>dfs.namenode.rpc-address.mycluster.nn1</name>
+                <value>cluster-172-25-0-2:8120</value>
+        </property>
+        <property>
+                <name>dfs.namenode.rpc-address.mycluster.nn2</name>
+                <value>cluster-172-25-0-3:8120</value>
+        </property>
+
+        <property>
+                <name>dfs.namenode.http-address.mycluster.nn1</name>
+                <value>cluster-172-25-0-2:9970</value>
+        </property>
+        <property>
+                <name>dfs.namenode.http-address.mycluster.nn2</name>
+                <value>cluster-172-25-0-3:9970</value>
+        </property>
+
+        <property>
+                <name>dfs.namenode.shared.edits.dir</name>
+                <value>qjournal://cluster-172-25-0-2:8485;cluster-172-25-0-3:8485;cluster-172-25-0-4:8485/mycluster</value>
+        </property>
+        <property>
+                <name>dfs.journalnode.edits.dir</name>
+                <value>/data/journal/data</value>
+        </property>
+
+        <property>
+                <name>dfs.client.failover.proxy.provider.mycluster</name>
+                <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+        </property>
+
+        <property>
+                <name>dfs.ha.fencing.methods</name>
+                <value>sshfence</value>
+        </property>
+
+        <property>
+                <name>dfs.ha.fencing.ssh.private-key-files</name>
+                <value>/home/hdfs/.ssh/id_rsa</value>
+        </property>
+
+        <property>
+                <name>dfs.ha.fencing.methods</name>
+                <value>shell(touch /home/hdfs/fen.txt)</value>
+        </property>
+
+        <property>
+                <name>dfs.ha.fencing.methods</name>
+                <value>shell(/bin/true)</value>
+        </property>
+
+
+        <property>
+                <name>dfs.journalnode.kerberos.principal</name>
+                <value>jn/_HOST@LONGPT.REALM</value>
+        </property>
+
+        <property>
+                <name>dfs.journalnode.keytab.file</name>
+                <value>/hdfs.keytab</value>
+        </property>
+
+        <!-- Caused by: javax.servlet.ServletException: javax.servlet.ServletException: Principal not defined in configuration -->
+        <!-- ${dfs.web.authentication.kerberos.principal} . cai nay de no call http lay du lieu journal node ao vc-->
+        <property>
+                <name>dfs.journalnode.kerberos.internal.spnego.principal</name>
+                <value>HTTP/_HOST@LONGPT.REALM</value>
+        </property>
+
+
+        <!-- end HA-->
+
+        <!-- automatic failover-->
+        <property>
+                <name>dfs.ha.automatic-failover.enabled</name>
+                <value>true</value>
+        </property>
+
+         <property>
+                <name>ha.zookeeper.quorum</name>
+                <value>cluster-172-25-0-2:2181,cluster-172-25-0-3:2181,cluster-172-25-0-3:2181</value>
+        </property>
+
+        <!-- end automatic failover-->
 
         <property>
                 <name>dfs.encrypt.data.transfer</name>

@@ -24,5 +24,7 @@ su - longpt -c $'\
           echo "cat file $file_path after make change" && \
           cat $file_path '
 
+su - hdfs -c $'ssh-keygen -t rsa -q -f "$HOME/.ssh/id_rsa" -N ""'
+
 service ssh start
 tail -f /dev/null 

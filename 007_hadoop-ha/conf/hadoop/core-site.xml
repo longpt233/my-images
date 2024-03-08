@@ -2,10 +2,19 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
 
-    <property>
+    <!-- <property>
         <name>fs.defaultFS</name>
         <value>hdfs://172.25.0.2:8120</value>
+    </property> -->
+
+    <!--HA-->
+
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://mycluster</value>
     </property>
+    <!--end ha-->
+
     <property>
         <name>hadoop.tmp.dir</name>
         <value>/data/tmp/</value>
@@ -26,6 +35,8 @@
         <value>
             RULE:[2:$1/$2@$0](datanode/.*@LONGPT.REALM)s/.*/hdfs/
             RULE:[2:$1/$2@$0](namenode/.*@LONGPT.REALM)s/.*/hdfs/
+            <!-- Illegal principal name jn/cluster-172-25-0-2@LONGPT.REALM: org.apache.hadoop.security.authentication.util.KerberosName$NoMatchingRule: No rules applied to jn/cluster-172-25-0-2@LONGPT.REALM -->
+            RULE:[2:$1/$2@$0](jn/.*@LONGPT.REALM)s/.*/hdfs/
             RULE:[2:$1;$2@$0]([a-z0-9]*;platform@LONGPT.REALM)s/;platform@LONGPT.REALM//
         </value>
         <description>The mapping from Kerberos principal names to local OS user names.</description>

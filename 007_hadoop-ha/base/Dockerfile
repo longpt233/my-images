@@ -59,11 +59,24 @@ ENV PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin
 ENV TZ="Asia/Ho_Chi_Minh"
 RUN date
 
+# RUN timedatectl set-timezone "Asia/Ho_Chi_Minh"
+
 RUN apt-get install sudo
 
 RUN adduser longpt
 RUN usermod -aG sudo longpt
 
+ARG ZOO_TAR=apache-zookeeper-3.7.2-bin.tar.gz
+ARG ZOO_DIR="apache-zookeeper-3.7.2-bin"
+ARG ZOO_URL="https://dlcdn.apache.org/zookeeper/zookeeper-3.7.2/${ZOO_TAR}"
+# install hadoop
+RUN set -x \
+    && curl -fSL "$ZOO_URL" -o /tmp/${ZOO_TAR} \
+    && tar -xvf /tmp/${ZOO_TAR} 
+RUN mv /${ZOO_DIR} /usr/local/zoo \
+    && rm /tmp/${ZOO_TAR}
+
+RUN apt-get update && apt-get install build-essential -y 
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh

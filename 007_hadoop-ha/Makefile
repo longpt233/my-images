@@ -30,7 +30,27 @@ hdfs-conf:
 	@docker cp ./conf/hadoop/. datanode1_name:/usr/local/hadoop/etc/hadoop/
 	@docker cp ./conf/hadoop/. datanode2_name:/usr/local/hadoop/etc/hadoop/
 
+hdfs-ssh:
+	@docker exec -u hdfs namenode_name bash -c 'rm -rf /home/hdfs/.ssh && ssh-keygen -t rsa -q -f "/home/hdfs/.ssh/id_rsa" -N ""'
+	@docker exec -u hdfs datanode1_name bash -c 'rm -rf /home/hdfs/.ssh && ssh-keygen -t rsa -q -f "/home/hdfs/.ssh/id_rsa" -N ""'
+	@docker cp namenode_name:/home/hdfs/.ssh/id_rsa.pub ./conf/ssh/id_rsa_data1.pub
+	@docker cp datanode1_name:/home/hdfs/.ssh/id_rsa.pub ./conf/ssh/id_rsa_data2.pub
+	@docker cp ./conf/ssh/id_rsa_data2.pub namenode_name:/home/hdfs/.ssh/id_rsa_data2.pub
+	@docker cp ./conf/ssh/id_rsa_data1.pub datanode1_name:/home/hdfs/.ssh/id_rsa_data1.pub
+	@docker exec -u hdfs namenode_name bash -c 'cat /home/hdfs/.ssh/id_rsa_data2.pub | tee -a /home/hdfs/.ssh/authorized_keys'
+	@docker exec -u hdfs datanode1_name bash -c 'cat /home/hdfs/.ssh/id_rsa_data1.pub | tee -a /home/hdfs/.ssh/authorized_keys'
+
+
 hdfs-run:
 	@docker exec -u hdfs namenode_name bash -c "whoami"
+
+zoo:
+	@docker cp ./conf/zoo/zoo.cfg namenode_name:/usr/local/zoo/conf/
+	@docker cp ./conf/zoo/zoo.cfg datanode1_name:/usr/local/zoo/conf/
+	@docker cp ./conf/zoo/zoo.cfg datanode2_name:/usr/local/zoo/conf/
+	@docker exec  namenode_name bash -c "mkdir -p /usr/local/zoo/data && echo 1 > /usr/local/zoo/data/myid && /usr/local/zoo/bin/zkServer.sh restart && sleep 5 && /usr/local/zoo/bin/zkServer.sh status"
+	@docker exec  datanode1_name bash -c "mkdir -p /usr/local/zoo/data && echo 2 > /usr/local/zoo/data/myid && /usr/local/zoo/bin/zkServer.sh restart && sleep 5 && /usr/local/zoo/bin/zkServer.sh status"
+	@docker exec  datanode2_name bash -c "mkdir -p /usr/local/zoo/data && echo 3 > /usr/local/zoo/data/myid && /usr/local/zoo/bin/zkServer.sh restart && sleep 5 && /usr/local/zoo/bin/zkServer.sh status"
+
 
 	

@@ -33,7 +33,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
 #export JSVC_HOME=${JSVC_HOME}
 
 export HDFS_DATANODE_SECURE_USER=hdfs
-export JSVC_HOME="/data/commons-daemon-1.3.4-src/src/native/unix"
+export JSVC_HOME="/commons-daemon-1.3.4-src/src/native/unix"
 
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-"/etc/hadoop"}
 

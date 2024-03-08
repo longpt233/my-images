@@ -75,6 +75,8 @@ addprinc -randkey datanode/cluster-172-25-0-4@LONGPT.REALM
 
 ```
 ktadd -kt ./hdfs.keytab namenode/cluster-172-25-0-2@LONGPT.REALM datanode/cluster-172-25-0-3@LONGPT.REALM datanode/cluster-172-25-0-4@LONGPT.REALM
+
+# keim tra quyen 
 klist -e -k -t hdfs.keytab 
 KRB5_TRACE=/dev/stdout kinit  -k -t hdfs.keytab namenode/cluster-172-25-0-2@LONGPT.REALM   
 
@@ -147,6 +149,22 @@ cat /data/log/privileged-root-datanode-cluster-172-25-0-3.err
 java.io.FileNotFoundException: /data/log/hadoop-hdfs-root-datanode-cluster-172-25-0-3.log (Permission denied)
 chown -R hdfs: /data/log/
 
+org.apache.hadoop.security.KerberosAuthException: failure to login: for principal: datanode/cluster-172-25-0-3@LONGPT.REALM from keytab /hdfs.keytab javax.security.auth.login.LoginException: Unable to obtain password from user
+chown hdfs: /hdfs.keytab 
+
+org.apache.hadoop.hdfs.server.common.InconsistentFSStateException: Directory /data/nn is in an inconsistent state: storage directory does not exist or is not accessible.
+mkdir /data/nn
+
+hdfs@cluster-172-25-0-2:~$ /usr/local/hadoop/bin/hdfs --daemon start namenode 
+hdfs@cluster-172-25-0-2:~$ cat /data/log/hadoop-hdfs-namenode-cluster-172-25-0-2.log 
+java.io.IOException: NameNode is not formatted.
+-> 
+hdfs@cluster-172-25-0-2:~$ /usr/local/hadoop/bin/hdfs namenode -format  
+
+namenode -format  xong thi loi nay: 
+Call From cluster-172-25-0-2/172.25.0.2 to cluster-172-25-0-3:8485 failed on connection exception: java.net.ConnectException: Connection refused; For more details see:  http://wiki.apache.org/hadoop/ConnectionRefused
+->
+hdfs@cluster-172-25-0-2:~$ /usr/local/hadoop/bin/hdfs --daemon start journalnode 
 
 # chay voi jsvc thi cac cai /data/dn nay quyen la hdfs, ps aux
 root@cluster-172-25-0-4:/# ll /data/
@@ -189,4 +207,78 @@ Found 1 items
 drwxr-xr-x   - hdfs supergroup          0 2024-03-07 14:37 /data
 
 
+```
+
+# ha 
+
+```
+kadmin.local
+addprinc -randkey namenode/cluster-172-25-0-3@LONGPT.REALM
+addprinc -randkey jn/cluster-172-25-0-2@LONGPT.REALM
+addprinc -randkey jn/cluster-172-25-0-3@LONGPT.REALM
+addprinc -randkey jn/cluster-172-25-0-4@LONGPT.REALM
+
+ktadd -kt ./hdfs.keytab namenode/cluster-172-25-0-2@LONGPT.REALM datanode/cluster-172-25-0-3@LONGPT.REALM datanode/cluster-172-25-0-4@LONGPT.REALM namenode/cluster-172-25-0-3@LONGPT.REALM jn/cluster-172-25-0-2@LONGPT.REALM jn/cluster-172-25-0-3@LONGPT.REALM jn/cluster-172-25-0-4@LONGPT.REALM
+
+# chay tren 3 con
+/usr/local/hadoop/bin/hdfs --daemon start journalnode
+
+
+/usr/local/hadoop/bin/hdfs namenode -format
+mkdir  /data/nn
+/usr/local/hadoop/bin/hdfs --daemon start namenode
+
+
+hdfs@cluster-172-25-0-2:~$ ls /home/hdfs/
+fen.txt
+hdfs@cluster-172-25-0-2:~$ /usr/local/hadoop/bin/hdfs haadmin -failover nn2 nn1
+(nn2 lam active)
+# chu y cap quyen ssh giua 2 user hdfs 2 node
+
+# 
+Caused by: org.apache.hadoop.security.authentication.client.AuthenticationException: Authentication failed, URL: http://cluster-172-25-0-4:8480/getJournal?jid=mycluster&segmentTxId=1&storageInfo=-65%3A552797994%3A1709810989439%3ACID-04bc9943-4e66-4af2-9f67-3e72c9994045&inProgressOk=true&user.name=namenode/cluster-172-25-0-2@LONGPT.REALM, status: 403, message: GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos credentails)
+        at org.apache.hadoop.security.authentication.client.AuthenticatedURL.extractToken(AuthenticatedURL.java:400)
+        at org.apache.hadoop.security.authentication.client.PseudoAuthenticator.authenticate(PseudoAuthenticator.java:74)
+        at org.apache.hadoop.security.authentication.client.KerberosAuthenticator.authenticate(KerberosAuthenticator.java:213)
+        ... 30 more
+2024-03-07 16:49:40,292 ERROR namenode.FSImage: Error replaying edit log at offset 0.  Expected transaction ID was 4
+
+
+(lam nhu sau k dc)
+hdfs@cluster-172-25-0-2:~$ /usr/local/hadoop/bin/hadoop namenode -recover
+
+# phai copy data sang con kia truoc khi bat (xem doc)
+hdfs@cluster-172-25-0-2:~$ scp -r /data/nn hdfs@172.25.0.3:/data/
+
+(mac du da kinit)
+hdfs@cluster-172-25-0-2:~$ curl --negotiate -u : http://cluster-172-25-0-3:8480/getJournal?jid=mycluster
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>Error 403 GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos credentails)</title>
+
+# chu y chay lai journalnode de no an principal moi la HTTP
+<property>
+        <name>dfs.journalnode.kerberos.internal.spnego.principal</name>
+        <value>HTTP/_HOST@LONGPT.REALM</value>   # cai nafy la HTTP (xem doc)
+</property>
+
+
+# 500 la oke
+hdfs@cluster-172-25-0-2:~$ curl --negotiate -u : http://cluster-172-25-0-3:8480/getJournal?jid=mycluster
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>Error 500 getedit failed. java.io.IOException: Invalid request has no segmentTxId parameter
+
+
+
+```
+
+
+```
+chay tren 1 node
+hdfs@cluster-172-25-0-3:~$ /usr/local/hadoop/bin/hdfs zkfc -formatZK
+
+hdfs@cluster-172-25-0-3:~$ /usr/local/hadoop/bin/hdfs --daemon start zkfc
 ```

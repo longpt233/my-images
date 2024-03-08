@@ -19,6 +19,7 @@ services:
     tty: true
     ports:  
       - 9864:9864
+      - 9971:9970
     networks:
         cluster-hadoop:
           ipv4_address: 172.25.0.3
