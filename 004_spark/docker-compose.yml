@@ -2,9 +2,43 @@ version: "3"
 
 services:
   spark-master:
-    image: longpt233/spark-base:2.0.0
+    image: longpt233/spark-alone:1.0.1
     build: 
-        context: .
+      context: .
     container_name: spark-master-name
+    hostname: cluster-172-25-0-2
     ports:
       - "4040:4040"  
+    networks:
+        cluster-spark:
+          ipv4_address: 172.25.0.2
+
+  slave1:
+    image: longpt233/spark-alone:1.0.1
+    build: 
+      context: .
+    container_name: slave1-name
+    hostname: cluster-172-25-0-3
+    networks:
+      cluster-spark:
+        ipv4_address: 172.25.0.3
+
+  slave2:
+    image: longpt233/spark-alone:1.0.1
+    build: 
+        context: .
+    container_name: slave2-name
+    hostname: cluster-172-25-0-4
+    networks:
+      cluster-spark:
+        ipv4_address: 172.25.0.4  
+
+networks:
+    cluster-spark:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.25.0.0/16
+
+    
