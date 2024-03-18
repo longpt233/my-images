@@ -12,4 +12,14 @@
         <name>yarn.resourcemanager.hostname</name>
         <value>hadoop-master</value>
     </property>
+     <property>
+        <name>yarn.node-labels.enabled</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>yarn.node-labels.fs-store.root-dir</name>
+        <!-- <value>hdfs://hadoop-master:9000/yarn/node-labels</value> -->
+        <value>file:///tmp/node-label</value>
+    </property>
 </configuration>
