@@ -6,8 +6,35 @@ services:
     build: 
         context: .
     container_name: hadoop-name
+    # entrypoint: /entrypoint.sh
     ports:
       - "9000:9000"   # data
       - "50070:50070" # datanode
       - "50075:50075" # namenode  
       - "9870:9870"   # for 3x 
+    networks:
+        cluster-hue:
+          ipv4_address: 172.26.0.3
+
+  cloudera:
+    image: gethue/hue:latest
+    hostname: hue
+    container_name: hue
+    # dns: 8.8.8.8
+    ports:
+    - "8888:8888"
+    volumes:
+      - ./hue/conf/hue.ini:/usr/share/hue/desktop/conf/hue.ini
+      - ./hue/webhdfs.py:/usr/share/hue/desktop/libs/hadoop/src/hadoop/fs/webhdfs.py
+    networks:
+        cluster-hue:
+          ipv4_address: 172.26.0.2
+
+
+networks:
+    cluster-hue:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.26.0.0/16
