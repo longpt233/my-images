@@ -1,7 +1,7 @@
 FROM longpt233/ubuntu-base:2.0.0
 # ban base nay da co ssh + java 8
 
-ARG HADOOP_VERSION=3.2.2
+ARG HADOOP_VERSION=3.2.4
 ARG HADOOP_TAR=hadoop-$HADOOP_VERSION.tar.gz
 ARG HADOOP_URL="https://mirror.downloadvn.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/${HADOOP_TAR}"
 
