@@ -1,0 +1,13 @@
+{
+    "name": "inventory-connector",
+    "config": {
+        "connector.class" : "io.debezium.connector.mongodb.MongoDbConnector",
+        "tasks.max" : "1",
+        "mongodb.hosts" : "rs0/localhost:27017",
+        "mongodb.name" : "local",
+        "mongodb.user" : "data_etl",
+        "mongodb.password" : "123456",
+        "database.include.list" : "inventory",
+        "database.history.kafka.bootstrap.servers" : "kafka:9092"
+    }
+}
