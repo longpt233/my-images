@@ -1,14 +1,15 @@
 IMAGE_NAME := "spark-alone"
-VER := "1.0.4"
+VER := "vtp-1.0.1"
 USER := "longpt233"
 
 build: 
 	@echo "build ${IMAGE_NAME}:${VER}"
-	# --build-arg HTTP_PROXY="http://10.60.117.113:8080" --build-arg HTTPS_PROXY="http://10.60.117.113:8080" 
-	@docker build  --no-cache -f ./Dockerfile -t ${USER}/${IMAGE_NAME}:${VER} .
-	# @docker build --build-arg NO_PROXY="127.0.0.1,localhost,10.*.*.*,192.168.*.*,171.244.51.*,voffice.viettel.vn,dauthau.viettel.vn,hr.viettelpost.vn,evtp.viettelpost.vn,quanlynhansu.viettel.vn,thongtinnhansu.viettel.vn,quanlytinhluong.viettel.vn,quanlytuyendung.viettel.vn,vtt.viettel.vn,qlsxpm.viettel.vn,sso.viettel.vn,bankplus.viettel.vn,bankplus2.viettel.vn,quanlybaohanh.bccs.viettel.vn,acc.viettel.vn,cas.sirc.viettel.com,datasecurity.viettel.vn,oc.viettelpost.vn,quanlytaisan.viettel.vn,skyt.viettel.vn,sso2.viettel.vn,cvos.sfive.vn,chinhtri.viettel.vn,ams.tinnhanthuonghieu.vn,merchant.bankplus.vn,*.tinnhanthuonghieu.vn,congtacdang-congtacchinhtri.viettel.vn,*.dttt.vn,chat.viettel.vn,pmtc.viettel.vn,ch.viettelpost.vn,bankplus1.viettel.vn,gboc.viettel.vn,vps.viettel.vn,manhinhsanhviettel.com,cms-tracking.viettelpost.vn,jira.viettelpost.vn,confluence.viettelpost.vn,callvts.cyberbot.vn,171.244.0.182,vtt.cyberbot.vn,fwt.fialda.com,daututaisan.viettel.vn,hz-connection.lab.vn,edrawind.com,*.sirc.viettel.com,pay.bankplus.vn,*.cloudrity.com.vn,*.local,tinhluong.viettelpost.vn,emp-tinhluong.viettelpost.vn,report-tinhluong.viettelpost.vn,payroll-tinhluong.viettelpost.vn,file-tinhluong.viettelpost.vn,system-tinhluong.viettelpost.vn,vsds.viettel.vn,apis.viettel.vn,notify.viettel.vn,adms.viettel.vn,*vhkt*.viettelpost.vn,teleport.viettelpost.vn,fininvest.viettel.vn,bi-yarn.viettelpost.vn,bi-hdfs.viettelpost.vn,bi-nifi.viettelpost.vn,tms-nifi.viettelpost.vn,bi-kafka-nifi.viettelpost.vn,bi-pentaho.viettelpost.vn,bi-airflow.viettelpost.vn,bi-zeppelin.viettelpost.vn,dev-bi-grafana.viettelpost.vn,dev-bi-victoriametrics.viettelpost.vn,dev-bi-pentaho.viettelpost.vn,teleport-partner.viettelpost.vn,wms-nifi.viettelpost.vn,teleport-dev.viettelpost.vn,noc-dev-pc.viettelpost.vn,noc-dev-api.viettelpost.vn,staging-bi-kong.viettelpost.vn,staging-bi-zeppelin.viettelpost.vn,staging-bi-hdfs.viettelpost.vn,staging-bi-yarn.viettelpost.vn,staging-bi-nifi.viettelpost.vn,staging-bi-nifi2.viettelpost.vn,staging-bi-airflow.viettelpost.vn,noc-staging-pc.viettelpost.vn,noc-staging-api.viettelpost.vn,noc-staging-resource.viettelpost.vn,staging-bi-trino.viettelpost.vn,bi-airflow2.viettelpost.vn,dev-bi-trino.viettelpost.vn,bi-hbase2.viettelpost.vn,bi-hbase3.viettelpost.vn,bi-trino-da.viettelpost.vn,vops.viettel.vn,bi-hbase.viettelpost.vn,staging-bi-superset.viettelpost.vn,noc-airflow.viettelpost.vn,noc-airflow-flower.viettelpost.vn" -f ./Dockerfile  -t ${USER}/${IMAGE_NAME}:${VER} .
-    # docker login registry.example.com or docker login. check: docker info
-	# @docker push ${USER}/${IMAGE_NAME}:${VER}
+# --build-arg HTTP_PROXY="http://10.63:8080" --build-arg HTTPS_PROXY="http://10.3:8080" 
+	@docker build  --network=host --no-cache -f ./vtp/Dockerfile -t ${USER}/${IMAGE_NAME}:${VER} ./vtp
+
+# @docker build --build-arg NO_PROXY="127.0.0.1,l" -f ./Dockerfile  -t ${USER}/${IMAGE_NAME}:${VER} .
+# docker login registry.example.com or docker login. check: docker info
+# @docker push ${USER}/${IMAGE_NAME}:${VER}
 
 start:
 	@docker compose up

@@ -3,12 +3,25 @@ FROM ubuntu:20.04
 USER root
 WORKDIR /
 
-RUN env 
+# ENV https_proxy http://10.60.117.113:8080
+# ENV http_proxy http://10.60.117.113:8080
+# ENV HTTP_PROXY http://10.60.117.113:8080
+# ENV HTTPS_PROXY http://10.60.117.113:8080
 
+# ENV NO_PROXY 127.0.0.1,localhost,10.*.*.*,192.168
+# ENV no_proxy 127.0.0.1,localhost,10.*.*.*,192.1
+
+# nhung cai tren cung co the cau hinh bang docker
+
+# nma apt su dung proxy trong /etc/apt/apt.conf -> cau hinh trong entrypoint 
+
+
+ADD apt.conf /etc/apt/apt.conf.d/10apt.conf
+# ADD environment /etc/environment
 # install supported tools
 RUN apt-get update
 RUN apt-get install -y \
-    curl \ 
+    curl  \
     net-tools \
     telnet \
     iputils-ping \

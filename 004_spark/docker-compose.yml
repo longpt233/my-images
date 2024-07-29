@@ -2,7 +2,7 @@ version: "3"
 
 services:
   spark-master:
-    image: longpt233/spark-alone:1.0.1
+    image: longpt233/spark-alone:vtp-1.0.1
     build: 
       context: .
     container_name: spark-master-name
@@ -14,7 +14,7 @@ services:
           ipv4_address: 172.25.0.2
 
   slave1:
-    image: longpt233/spark-alone:1.0.1
+    image: longpt233/spark-alone:vtp-1.0.1
     build: 
       context: .
     container_name: slave1-name
@@ -24,7 +24,7 @@ services:
         ipv4_address: 172.25.0.3
 
   slave2:
-    image: longpt233/spark-alone:1.0.1
+    image: longpt233/spark-alone:vtp-1.0.1
     build: 
         context: .
     container_name: slave2-name
