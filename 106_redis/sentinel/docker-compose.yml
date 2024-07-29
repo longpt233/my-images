@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+    redis-master:
+        image: redis:3
+        command: redis-server
+
+    redis-slave-1:
+        image: redis:3
+        command: redis-server --slaveof redis-master 6379
+        links:
+            - redis-master
+
+    redis-slave-2:
+        image: redis:3
+        command: redis-server --slaveof redis-master 6379
+        links:
+            - redis-master
+
+    sentinel-1:
+        build: sentinel
+        environment:
+            - SENTINEL_DOWN_AFTER=5000
+            - SENTINEL_FAILOVER=500
+            - SENTINEL_QUORUM=2
+        ports:
+            - "4000:26379"
+        depends_on:
+            - redis-master
+            - redis-slave-1
+            - redis-slave-2
+
+    sentinel-2:
+        build: sentinel
+        environment:
+            - SENTINEL_DOWN_AFTER=5000
+            - SENTINEL_FAILOVER=500
+            - SENTINEL_QUORUM=2
+        ports:
+            - "4001:26379"
+        depends_on:
+            - redis-master
+            - redis-slave-1
+            - redis-slave-2
+
+    sentinel-3:
+        build: sentinel
+        environment:
+            - SENTINEL_DOWN_AFTER=5000
+            - SENTINEL_FAILOVER=500
+            - SENTINEL_QUORUM=2
+        depends_on:
+            - redis-master
+            - redis-slave-1
+            - redis-slave-2
+        ports:
+            - "4002:26379"

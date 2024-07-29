@@ -9,4 +9,7 @@ mongodb/data
 *target
 *data-docker
 .vscode
+*.vagrant
 201_kafka/data
+004_spark/vtp/entrypoint.sh
+*.venv
