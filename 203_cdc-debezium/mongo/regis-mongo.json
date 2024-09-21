@@ -1,9 +1,9 @@
 {
-    "name": "inventory-connector",
+    "name": "inventory-connector2",
     "config": {
         "connector.class" : "io.debezium.connector.mongodb.MongoDbConnector",
         "tasks.max" : "1",
-        "mongodb.hosts" : "rs0/localhost:27017",
+        "mongodb.hosts" : "rs0/mongo1:27017",
         "mongodb.name" : "local",
         "mongodb.user" : "data_etl",
         "mongodb.password" : "123456",

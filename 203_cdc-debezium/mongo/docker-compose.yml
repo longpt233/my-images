@@ -31,3 +31,14 @@ services:
 # directory and uncomment the lines below
     volumes:
       - ./debezium-connector-mongodb:/kafka/connect/debezium-connector-mongodb
+  
+  mongo1:
+    hostname: mongo1
+    container_name: localmongo1
+    image: mongo:3.6
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--journal", "--dbpath", "/data/db", "--enableMajorityReadConcern", "false" ]
