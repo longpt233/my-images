@@ -16,3 +16,7 @@ mongodb/data
 
 *volumes
 *debezium-con*
+
+*apt.conf
+
+*hadoop-3.3.5.tar.gz
