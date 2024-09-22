@@ -1,0 +1,3 @@
+Acquire::http::proxy "http://10.2999";
+Acquire::https::proxy "http://10.208.9"; 
+Acquire::ftp::proxy "http://10.29999";

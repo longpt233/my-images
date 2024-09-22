@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+
+     <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://hadoop110:9000</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authorization</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>hadoop.http.authentication.type</name>
+        <value>kerberos</value>
+    </property>
+
+
+    <property>
+        <name>hadoop.http.authentication.kerberos.keytab</name>
+        <value>/hdfs.keytab</value>
+    </property>
+    <property>
+        <name>hadoop.http.authentication.kerberos.principal</name>
+        <value>HTTP/_HOST@HADOOP.REALM</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.auth_to_local</name>
+        <value>
+            RULE:[2:$1/$2@$0](datanode/.*@HADOOP.REALM)s/.*/root/
+            RULE:[2:$1/$2@$0](namenode/.*@HADOOP.REALM)s/.*/root/
+        </value>
+        <description>The mapping from Kerberos principal names to local OS user names.</description>
+    </property>
+
+</configuration>

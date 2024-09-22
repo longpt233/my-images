@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  namenode:
+    image: longpt233/hadoop-auth:0.0.1
+    container_name: dragonsuper   # = host name = core-site 
+    hostname: hadoop110
+    ports: 
+      - 9970:9970   # ui name node  
+      - 9864:9864
+      - 9870:9870
+    tty: true
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.10
+
+
+networks:
+    cluster-hadoop:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.25.0.0/16
