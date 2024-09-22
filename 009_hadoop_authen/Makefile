@@ -8,3 +8,7 @@ build:
     # docker login registry.example.com or docker login. check: docker info
 	# @docker push ${USER}/${IMAGE_NAME}:${VER}
 
+nifi: 
+	@docker build -f ./nifi/Dockerfile -t ${USER}/${nifi-auth}:${VER} ./nifi
+
+

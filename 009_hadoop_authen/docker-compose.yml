@@ -14,6 +14,17 @@ services:
         cluster-hadoop:
           ipv4_address: 172.25.1.10
 
+  nifi:
+    image: longpt233/nifi-auth:0.0.1
+    container_name: dragonnifi   # = host name = core-site 
+    hostname: hadoop111
+    ports: 
+      - 8080:8080
+    tty: true
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.11
+
 
 networks:
     cluster-hadoop:
