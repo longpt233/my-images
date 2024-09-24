@@ -22,18 +22,13 @@
 # remote nodes.
 
 # The java implementation to use.
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
 # The jsvc implementation to use. Jsvc is required to run secure datanodes
 # that bind to privileged ports to provide authentication of data transfer
 # protocol.  Jsvc is not required if SASL is configured for authentication of
 # data transfer protocol using non-privileged ports.
-# https://commons.apache.org/proper/commons-daemon/download_daemon.cgi
-# java.lang.RuntimeException: Cannot start secure DataNode due to incorrect config. See https://cwiki.apache.org/confluence/display/HADOOP/Secure+DataNode for details.
 #export JSVC_HOME=${JSVC_HOME}
-
-# export HDFS_DATANODE_SECURE_USER=hdfs
-# export JSVC_HOME="/commons-daemon-1.3.4-src/src/native/unix"
 
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-"/etc/hadoop"}
 
@@ -71,11 +66,10 @@ export HADOOP_CLIENT_OPTS="-Xmx512m $HADOOP_CLIENT_OPTS"
 # to provide authentication of data transfer protocol.  This **MUST NOT** be
 # defined if SASL is configured for authentication of data transfer protocol
 # using non-privileged ports.
-# export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
+export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
 
 # Where log files are stored.  $HADOOP_HOME/logs by default.
 #export HADOOP_LOG_DIR=${HADOOP_LOG_DIR}/$USER
-# export HADOOP_LOG_DIR="/data/log"
 
 # Where log files are stored in the secure data environment.
 export HADOOP_SECURE_DN_LOG_DIR=${HADOOP_LOG_DIR}/${HADOOP_HDFS_USER}

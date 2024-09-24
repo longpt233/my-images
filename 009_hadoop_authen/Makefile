@@ -1,5 +1,6 @@
-IMAGE_NAME := "hadoop-auth"
-NIFI_IMAGE_NAME := "nifi-auth"
+IMAGE_NAME := "hadoop-secure"
+NIFI_IMAGE_NAME := "nifi"
+HADOOP_IMAGE_NAME := "hadoop-insecure"
 VER := "0.0.1"
 USER := "longpt233"
 HTTP_PROXY := http://10.208.164.185:9999
@@ -8,8 +9,36 @@ HTTPS_PROXY := http://10.208.164.185:9999
 
 .PHONY: build nifi
 
+#  docker --build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY} 
+
 build: 
 	@echo "build ${IMAGE_NAME}:${VER}"
-	@docker build -f ./base/Dockerfile -t ${USER}/${IMAGE_NAME}:${VER} ./base
-nifi: 
-	@docker build --build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY} -f ./nifi/Dockerfile -t ${USER}/${NIFI_IMAGE_NAME}:${VER} ./nifi
+	@docker build -f ./hadoop/Dockerfile -t ${USER}/${IMAGE_NAME}:${VER} . 
+	@docker build -f ./hadoop-insecure/Dockerfile -t ${USER}/${HADOOP_IMAGE_NAME}:${VER} .
+	@docker build -f ./nifi/Dockerfile -t ${USER}/${NIFI_IMAGE_NAME}:${VER} .
+
+
+# @docker cp ../002_hadoop/conf/core-site.xml dragonnifi:/tmp/
+# @docker cp ../002_hadoop/conf/hdfs-site.xml dragonnifi:/tmp/
+# @docker cp ./nifi/hdfs-site.xml dragonnifi:/
+# @docker cp ./nifi/core-site.xml dragonnifi:/
+# @docker cp ./nifi/krb5.conf dragonnifi:/etc/
+
+
+#  You need to persist the whole /opt/nifi/nifi-current/conf/ folder
+# @docker cp  dragonnifi:/opt/nifi/conf/flow.json.gz ./nifi/conf/flow.json.gz
+# @docker cp  dragonnifi:/opt/nifi/conf/flow.xml.gz ./nifi/conf/flow.xml.gz
+
+
+# run once to get config to local
+# @docker cp  dragonnifi:/opt/nifi/conf ./nifi/conf
+
+
+setup:
+	@echo "hello"
+
+keytab:
+	@docker cp  dragonsecure:/hdfs.keytab ./nifi/hdfs.keytab
+	@docker cp ./nifi/hdfs.keytab dragonnifi:/
+	@docker exec dragonnifi bash -c "chmod 777 /hdfs.keytab"
+	@docker exec dragonnifi bash -c "chown root. /hdfs.keytab"

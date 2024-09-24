@@ -32,8 +32,7 @@ LABEL Description="Hadoop Dev" \
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 ENV PATH $PATH:$JAVA_HOME/bin
 
-ARG HADOOP_TAR=hadoop-$HADOOP_VERSION.tar.gz
-ARG HADOOP_URL="https://mirror.downloadvn.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/${HADOOP_TAR}"
+
 
 
 RUN addgroup hadoop
@@ -47,6 +46,8 @@ RUN useradd -m -s /bin/bash -g hadoop  hdfs
 RUN mkdir /storage
 
 # install hadoop
+# ARG HADOOP_TAR=hadoop-$HADOOP_VERSION.tar.gz
+# ARG HADOOP_URL="https://mirror.downloadvn.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/${HADOOP_TAR}"
 # RUN set -x \
 #     && curl -fSL "$HADOOP_URL" -o /tmp/${HADOOP_TAR} \
 #     && tar -xvf /tmp/${HADOOP_TAR} 
@@ -55,7 +56,7 @@ RUN mkdir /storage
 
 COPY hadoop-3.3.5.tar.gz /tmp/hadoop-3.3.5.tar.gz
 
-RUN set -x && tar -xvf /tmp/hadoop-3.3.5.tar.gz -C /tmp/ \
+RUN tar -xvf /tmp/hadoop-3.3.5.tar.gz -C /tmp/ \
     && mv /tmp/hadoop-3.3.5 /opt/hadoop \
     && rm /tmp/hadoop-3.3.5.tar.gz
 
@@ -70,11 +71,12 @@ RUN date
 RUN adduser longpt
 RUN usermod -aG sudo longpt
 
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod a+x /entrypoint.sh
+ADD wgetrc /etc/wgetrc 
+RUN wget https://dlcdn.apache.org//commons/daemon/source/commons-daemon-1.4.0-src.tar.gz && tar -xvzf commons-daemon-1.4.0-src.tar.gz   && \
+apt-get install -y  build-essential && cd commons-daemon-1.4.0-src/src/native/unix && ./configure --with-java=/usr/lib/jvm/java-8-openjdk-amd64   && make
 
-ADD kdc.conf /etc/krb5kdc/kdc.conf  
-ADD krb5.conf /etc/krb5.conf 
+ADD hadoop/kdc.conf /etc/krb5kdc/kdc.conf  
+ADD hadoop/krb5.conf /etc/krb5.conf 
 
 
 # Tạo file mật khẩu tạm thời và chạy krb5_newrealm
@@ -89,15 +91,23 @@ RUN kdb5_util create -s -r HADOOP.REALM -P "yourpassword"
 RUN sudo kadmin.local -q "addprinc -randkey namenode/hadoop110@HADOOP.REALM" && \
     sudo kadmin.local -q "addprinc -randkey datanode/hadoop110@HADOOP.REALM" && \
     sudo kadmin.local -q "addprinc -randkey HTTP/hadoop110@HADOOP.REALM" && \
-    sudo kadmin.local -q "xst -k /hdfs.keytab HTTP/hadoop110@HADOOP.REALM  namenode/hadoop110@HADOOP.REALM datanode/hadoop110@HADOOP.REALM"
+    sudo kadmin.local -q "xst -k /hdfs.keytab HTTP/hadoop110@HADOOP.REALM  namenode/hadoop110@HADOOP.REALM datanode/hadoop110@HADOOP.REALM" && \
+    sudo kadmin.local -q "addprinc -randkey nifi/hadoop111@HADOOP.REALM" && \
+    sudo kadmin.local -q "xst -k /nifi.keytab nifi/hadoop111@HADOOP.REALM"
+
 
 # Đảm bảo rằng các file keytab có quyền truy cập phù hợp
 RUN chmod 777 /hdfs.keytab
+#RUN mkdir /storage
+RUN chmod 777 /storage
 
+ADD hadoop/core-site.xml /opt/hadoop/etc/hadoop/
+ADD hadoop/hdfs-site.xml /opt/hadoop/etc/hadoop/
+ADD hadoop/hadoop-env.sh /opt/hadoop/etc/hadoop/
 
-ADD core-site.xml /opt/hadoop/etc/hadoop/
-ADD hdfs-site.xml /opt/hadoop/etc/hadoop/
-ADD hadoop-env.sh /opt/hadoop/etc/hadoop/
+ADD hadoop/entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
+
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 

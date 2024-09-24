@@ -18,26 +18,30 @@
         <value>true</value>
     </property>
 
-    <property>
+    <!-- <property>
         <name>hadoop.http.authentication.type</name>
         <value>kerberos</value>
+    </property> -->
+
+ <property>
+        <name>hadoop.http.authentication.simple.anonymous.allowed</name>
+        <value>true</value>
     </property>
-
-
+    <property>
+        <name>hadoop.http.authentication.kerberos.principal</name>
+	<value>HTTP/hadoop110@HADOOP.REALM</value>
+    </property>
     <property>
         <name>hadoop.http.authentication.kerberos.keytab</name>
         <value>/hdfs.keytab</value>
     </property>
-    <property>
-        <name>hadoop.http.authentication.kerberos.principal</name>
-        <value>HTTP/_HOST@HADOOP.REALM</value>
-    </property>
+
 
     <property>
         <name>hadoop.security.auth_to_local</name>
         <value>
-            RULE:[2:$1/$2@$0](datanode/.*@HADOOP.REALM)s/.*/root/
-            RULE:[2:$1/$2@$0](namenode/.*@HADOOP.REALM)s/.*/root/
+            RULE:[2:$1/$2@$0](datanode/hadoop110@HADOOP.REALM)s/.*/hdfs/
+            RULE:[2:$1/$2@$0](namenode/hadoop110@HADOOP.REALM)s/.*/hdfs/
         </value>
         <description>The mapping from Kerberos principal names to local OS user names.</description>
     </property>

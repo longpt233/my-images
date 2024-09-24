@@ -40,6 +40,29 @@
         </property>
 
         <!--security-->
+
+<property>
+                <name>dfs.datanode.http.address</name>
+                <value>0.0.0.0:964</value>
+        </property>
+        <property>
+                <name>dfs.datanode.address</name>
+                <value>0.0.0.0:966</value>
+        </property>
+        <property>
+                <name>datanode.https.port</name>
+                <value>50575</value>
+        </property>
+
+        <!-- k co cai nay loi namenode -->
+        <property>
+                <name>dfs.block.access.token.enable</name>
+                <value>true</value>
+        </property>
+
+
+
+        <!--security-->
         <property>
                 <name>dfs.namenode.kerberos.principal</name>
                 <value>namenode/_HOST@HADOOP.REALM</value>
@@ -48,13 +71,6 @@
                 <name>dfs.namenode.keytab.file</name>
                 <value>/hdfs.keytab</value>
         </property>
-         <property>
-                <name>dfs.namenode.http-address</name>
-                <value>0.0.0.0:9870</value>
-        </property>
-
-
-
         <property>
                 <name>dfs.datanode.kerberos.principal</name>
                 <value>datanode/_HOST@HADOOP.REALM</value>
@@ -63,34 +79,39 @@
                 <name>dfs.datanode.keytab.file</name>
                 <value>/hdfs.keytab</value>
         </property>
-        <property>
-                <name>dfs.datanode.http.address</name>
-                <value>0.0.0.0:9864</value>
-        </property>
-        <property>
-                <name>dfs.datanode.address</name>
-                <value>0.0.0.0:9866</value>
-        </property>
 
+
+        <!-- Caused by: javax.servlet.ServletException: javax.servlet.ServletException: Principal not defined in configuration-->
+        <property>
+                <name>dfs.web.authentication.kerberos.principal</name>
+                <value>HTTP/_HOST@HADOOP.REALM</value>
+        </property>
 
         <property>
                 <name>dfs.web.authentication.kerberos.keytab</name>
                 <value>/hdfs.keytab</value>
         </property>
-        <property>
-                <name>dfs.web.authentication.kerberos.principal</name>
-                <value>HTTP/_HOST@HADOOP.REALM</value>
+
+
+         <!-- end security-->
+
+<property>
+                <name>dfs.encrypt.data.transfer</name>
+                <value>true</value>
         </property>
+        <property>
+                <name>dfs.encrypt.data.transfer.algorithm</name>
+                <value>rc4</value>
+        </property>
+
         <property>
                 <name>dfs.webhdfs.enabled</name>
                 <value>true</value>
         </property>
         <property>
-                <name>hadoop.http.authentication.type</name>
-                <value>kerberos</value>
-        </property>
-         <!-- end security-->
-
+        <name>hadoop.http.authentication.type</name>
+        <value>kerberos</value>
+    </property>
 
 
 </configuration>
