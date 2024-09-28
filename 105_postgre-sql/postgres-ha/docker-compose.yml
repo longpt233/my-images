@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  postgres1:
+    image: longpt233/postgres-ha:0.0.1 
+    container_name: piupiumaster
+    hostname: postgres105
+    ports: 
+      - 5432
+    tty: true
+    networks:
+        postgres-net:
+          ipv4_address: 172.26.0.105
+
+  postgres2:
+    image: longpt233/postgres-ha:0.0.1 
+    container_name: piupiuslave
+    hostname: postgres106
+    ports: 
+      - 5432
+    tty: true
+    networks:
+        postgres-net:
+          ipv4_address: 172.26.0.106
+
+networks:
+    postgres-net:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.26.0.0/16
