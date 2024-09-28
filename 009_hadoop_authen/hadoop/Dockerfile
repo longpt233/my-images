@@ -92,8 +92,8 @@ RUN sudo kadmin.local -q "addprinc -randkey namenode/hadoop110@HADOOP.REALM" && 
     sudo kadmin.local -q "addprinc -randkey datanode/hadoop110@HADOOP.REALM" && \
     sudo kadmin.local -q "addprinc -randkey HTTP/hadoop110@HADOOP.REALM" && \
     sudo kadmin.local -q "xst -k /hdfs.keytab HTTP/hadoop110@HADOOP.REALM  namenode/hadoop110@HADOOP.REALM datanode/hadoop110@HADOOP.REALM" && \
-    sudo kadmin.local -q "addprinc -randkey nifi/hadoop111@HADOOP.REALM" && \
-    sudo kadmin.local -q "xst -k /nifi.keytab nifi/hadoop111@HADOOP.REALM"
+    sudo kadmin.local -q "addprinc -randkey nifi@HADOOP.REALM" && \
+    sudo kadmin.local -q "xst -k /nifi.keytab nifi@HADOOP.REALM"
 
 
 # Đảm bảo rằng các file keytab có quyền truy cập phù hợp

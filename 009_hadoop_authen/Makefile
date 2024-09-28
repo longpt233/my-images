@@ -11,6 +11,8 @@ HTTPS_PROXY := http://10.208.164.185:9999
 
 #  docker --build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY} 
 
+
+
 build: 
 	@echo "build ${IMAGE_NAME}:${VER}"
 	@docker build -f ./hadoop/Dockerfile -t ${USER}/${IMAGE_NAME}:${VER} . 
@@ -34,11 +36,19 @@ build:
 # @docker cp  dragonnifi:/opt/nifi/conf ./nifi/conf
 
 
+# @docker cp /home/long/IdeaProjects/nifi/nifi-nar-bundles/nifi-extension-utils/nifi-hadoop-utils/target/nifi-hadoop-utils-1.19.2-SNAPSHOT.jar dragonnifi:/opt/nifi/lib/nifi-hadoop-nar-1.19.2-SNAPSHOT.nar
+
+
 setup:
-	@echo "hello"
+	@docker cp /home/long/IdeaProjects/nifi/nifi-nar-bundles/nifi-hadoop-bundle/nifi-hadoop-nar/target/nifi-hadoop-nar-1.19.2-SNAPSHOT.nar dragonnifi:/opt/nifi/lib/nifi-hadoop-nar-1.19.2-SNAPSHOT.nar
+	@docker exec dragonnifi bash -c "./bin/nifi.sh restart"
 
 keytab:
 	@docker cp  dragonsecure:/hdfs.keytab ./nifi/hdfs.keytab
 	@docker cp ./nifi/hdfs.keytab dragonnifi:/
 	@docker exec dragonnifi bash -c "chmod 777 /hdfs.keytab"
-	@docker exec dragonnifi bash -c "chown root. /hdfs.keytab"
+	@docker exec dragonnifi bash -c "chown hadoop. /hdfs.keytab"
+	@docker cp  dragonsecure:/nifi.keytab ./nifi/nifi.keytab
+	@docker cp ./nifi/nifi.keytab dragonnifi:/
+	@docker exec dragonnifi bash -c "chmod 777 /nifi.keytab"
+	@docker exec dragonnifi bash -c "chown hadoop. /nifi.keytab"

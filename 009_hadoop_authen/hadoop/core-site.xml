@@ -42,6 +42,7 @@
         <value>
             RULE:[2:$1/$2@$0](datanode/hadoop110@HADOOP.REALM)s/.*/hdfs/
             RULE:[2:$1/$2@$0](namenode/hadoop110@HADOOP.REALM)s/.*/hdfs/
+            RULE:[2:$1/$2@$0](nifi@HADOOP.REALM)s/.*/nifi/
         </value>
         <description>The mapping from Kerberos principal names to local OS user names.</description>
     </property>

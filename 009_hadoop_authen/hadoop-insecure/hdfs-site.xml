@@ -27,4 +27,23 @@
         <name>dfs.datanode.data.dir</name>
         <value>/dfs/data</value>
     </property>
+
+
+ <property>
+                <name>dfs.permissions</name>
+                <value>false</value>
+        </property>
+        <property>
+                <name>dfs.namenode.http-address</name>
+                <value>172.25.1.12:50070</value>
+        </property>
+        <property>
+                <name>dfs.ha.fencing.ssh.private-key-files</name>
+                <value>/home/hadoop/.ssh/id_rsa</value>
+        </property>
+
+<!-- <property>
+  <name>hadoop.security.authentication</name>
+  <value>simple</value>
+</property> -->
 </configuration>

@@ -32,12 +32,12 @@ krb5kdc
 
 klist -e -k -t /hdfs.keytab
 
-sleep 10
+sleep 20
 /opt/hadoop/bin/hdfs --daemon start namenode
 sleep 20
 chown -R hdfs. /storage
 /opt/hadoop/bin/hdfs --daemon start datanode
-sleep 10
+sleep 20
 echo "secure" && jps
 
 kinit -kt /hdfs.keytab namenode/hadoop110@HADOOP.REALM

@@ -16,4 +16,4 @@ echo $'
 # chmod 775  /opt/nifi/conf/flow.xml.gz
 
 
-cd ${NIFI_HOME} &&  ./bin/nifi.sh start && tail -f ./logs/nifi-app.log | grep -v INFO
+cd ${NIFI_HOME} &&  ./bin/nifi.sh start && tail -f ./logs/nifi-app.log | grep -e ERROR  start  -v 

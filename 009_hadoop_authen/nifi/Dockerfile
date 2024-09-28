@@ -81,8 +81,8 @@ RUN mkdir /opt/nifi/hadoop
 # ADD hadoop/core-site.xml /opt/nifi/hadoop/core-site.xml
 # ADD hadoop/hdfs-site.xml /opt/nifi/hadoop/hdfs-site.xml
 
-ADD hadoop-insecure/core-site.xml /opt/nifi/hadoop/core-site-insecure.xml
-ADD hadoop-insecure/hdfs-site.xml /opt/nifi/hadoop/hdfs-site-insecure.xml
+ADD hadoop-insecure/core-site.xml /opt/nifi/hadoop/core-site.xml
+ADD hadoop-insecure/hdfs-site.xml /opt/nifi/hadoop/hdfs-site.xml
 
 RUN chmod -R 777 /opt/nifi/hadoop/core-site* /opt/nifi/hadoop/hdfs-site* 
 
@@ -101,5 +101,13 @@ ENV TZ "Asia/Ho_Chi_Minh"
 RUN date
 
 RUN ./bin/nifi.sh set-single-user-credentials admin admin12345678
+
+RUN adduser hadoop
+
+RUN chown -R hadoop:hadoop /opt/nifi
+
+USER hadoop
+
+
 
 ENTRYPOINT [ "/entrypoint.sh" ]

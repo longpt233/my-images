@@ -2,7 +2,7 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://hadoop112:9000</value>
+        <value>hdfs://172.25.1.12:9000</value>
     </property>
     <!-- From hadoop to null:0 neeus khoong de dung cai hostname nay -->
 </configuration>
