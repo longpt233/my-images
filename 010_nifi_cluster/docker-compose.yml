@@ -1,0 +1,89 @@
+version: "3"
+
+services:
+  nifi-staging:
+    image: longpt233/nifi:0.0.1
+    container_name: dragonstag1   # = host name = core-site 
+    hostname: hadoop115
+    ports: 
+      - 8081:8080
+    volumes:
+      # - ./nifi/conf/flow.json.gz:/opt/nifi/conf/flow.json.gz
+      # - ./nifi/conf/flow.xml.gz:/opt/nifi/conf/flow.xml.gz
+       - ./conf1:/opt/nifi/conf
+       - ./zoo/zoo1:/opt/nifi/state/zookeeper
+    # entrypoint: 
+    #    - 
+
+    tty: true
+    networks:
+        cluster-nifi:
+          ipv4_address: 172.25.1.15
+
+  nifi-staging2:
+    image: longpt233/nifi:0.0.1
+    container_name: dragonstag2   # = host name = core-site 
+    hostname: hadoop116
+    ports: 
+      - 8082:8080
+    volumes:
+      # - ./nifi/conf/flow.json.gz:/opt/nifi/conf/flow.json.gz
+      # - ./nifi/conf/flow.xml.gz:/opt/nifi/conf/flow.xml.gz
+       - ./conf2:/opt/nifi/conf
+       - ./zoo/zoo2:/opt/nifi/state/zookeeper
+
+    tty: true
+    networks:
+        cluster-nifi:
+          ipv4_address: 172.25.1.16
+
+  nifi-staging3:
+    image: longpt233/nifi:0.0.1
+    container_name: dragonstag3   # = host name = core-site 
+    hostname: hadoop117
+    ports: 
+      - 8083:8080
+    volumes:
+      # - ./nifi/conf/flow.json.gz:/opt/nifi/conf/flow.json.gz
+      # - ./nifi/conf/flow.xml.gz:/opt/nifi/conf/flow.xml.gz
+       - ./conf3:/opt/nifi/conf
+       - ./zoo/zoo3:/opt/nifi/state/zookeeper
+
+    tty: true
+    networks:
+        cluster-nifi:
+          ipv4_address: 172.25.1.17       
+
+  namenode:
+    image: longpt233/hadoop-secure:0.0.1
+    container_name: dragonsecure   # = host name = core-site 
+    hostname: hadoop110
+    ports: 
+      - 50070:50070   # ui name node  
+      - 9864:9864
+      - 9870:9870
+    tty: true
+    networks:
+        cluster-nifi:
+          ipv4_address: 172.25.1.10
+
+  unsecure:
+    image: longpt233/hadoop-insecure:0.0.1
+    container_name: dragoninsecure
+    hostname: hadoop112
+    ports:
+      - "50071:50070" # datanode
+      - "50075:50075" # namenode
+      - "9871:9870"   # for 3x
+    networks:
+        cluster-nifi:
+          ipv4_address: 172.25.1.12
+
+
+networks:
+    cluster-nifi:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.25.1.0/24

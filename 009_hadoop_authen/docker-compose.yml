@@ -14,16 +14,16 @@ services:
   #       cluster-hadoop:
   #         ipv4_address: 172.25.1.10
 
-  nifi:
-    image: longpt233/nifi:0.0.1
-    container_name: dragonnifi   # = host name = core-site 
-    hostname: hadoop111
-    ports: 
-      - 8080:8080
-    volumes:
+  # nifi:
+  #   image: longpt233/nifi:0.0.1
+  #   container_name: dragonnifi   # = host name = core-site 
+  #   hostname: hadoop111
+  #   ports: 
+  #     - 8080:8080
+    # volumes:
       # - ./nifi/conf/flow.json.gz:/opt/nifi/conf/flow.json.gz
       # - ./nifi/conf/flow.xml.gz:/opt/nifi/conf/flow.xml.gz
-       - ./nifi/conf:/opt/nifi/conf
+      #  - ./nifi/conf:/opt/nifi/conf
 
     tty: true
     networks:
