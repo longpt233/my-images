@@ -1,4 +1,5 @@
 *log
+!011_hive_ranger/trino/etc/catalog
 *.class
 *.st
 .idea
@@ -22,6 +23,12 @@ mongodb/data
 
 
 *hadoop-3.3.5.tar.gz
+*hive-standalone-metastore-3.0.0-bin.tar.gz
+*apache-hive-3.1.3-bin.tar.gz
+*postgresql-42.5.4.jar
+011_hive_ranger/postgre/.tmp
+*jdk-17_linux-x64_bin.tar.gz
+011_hive_ranger/*.tar.gz
 
 009_hadoop_authen/nifi/conf
 

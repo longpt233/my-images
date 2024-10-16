@@ -1,0 +1,115 @@
+{
+  "schemas": [
+    {
+      "schema": "information_schema",
+      "owner": true
+    },
+    {
+      "group": "(admin)",
+      "catalog": ".*",
+      "schema": ".*",
+      "owner": true
+    }
+  ],
+  "tables": [
+    {
+      "schema": "information_schema",
+      "table": ".*",
+      "privileges": [
+        "SELECT"
+      ]
+    },
+    {
+      "catalog": "system",
+      "privileges": [
+        "SELECT"
+      ]
+    },
+    {
+      "group": "(admin)",
+      "privileges": [
+        "SELECT",
+        "INSERT",
+        "DELETE",
+        "UPDATE",
+        "OWNERSHIP"
+      ]
+    },
+    {
+      "group": "(all_ro)",
+      "catalog": ".*",
+      "schema": "^(?!.*test).*",
+      "privileges": [
+        "SELECT"
+      ]
+    },
+    {
+      "group": "hive_ro",
+      "catalog": "hive",
+      "schema": "^(?!.*test).*",
+      "table": ".*",
+      "privileges": [
+        "SELECT"
+      ]
+    },
+    {
+      "group": "phoenix_ro",
+      "catalog": "phoenix",
+      "schema": ".*",
+      "table": ".*",
+      "privileges": [
+        "SELECT"
+      ]
+    },
+    {
+      "group": "postgre_ro",
+      "catalog": "noc_.*",
+      "schema": ".*",
+      "table": ".*",
+      "privileges": [
+        "SELECT"
+      ]
+    },
+    {
+      "group": "hive_test_rw",
+      "catalog": "hive",
+      "schema": "test.*",
+      "table": ".*",
+      "privileges": [
+        "SELECT",
+        "INSERT",
+        "DELETE",
+        "OWNERSHIP"
+      ]
+    },
+    {
+      "group": "hive_excel",
+      "catalog": "hive",
+      "schema": "(bi_excel|bi_report)",
+      "table": ".*",
+      "privileges": [
+        "SELECT"
+      ]
+    },
+    {
+      "group": "hive_small",
+      "catalog": "hive_small",
+      "schema": ".*",
+      "table": ".*",
+      "privileges": [
+        "SELECT" 
+      ]
+    },
+    {
+      "group": "(phong_dvkh|phong_ttvh|phong_clkd|phong_ctylog)",
+      "catalog": "hive_31_days",
+      "schema": ".*",
+      "table": ".*",
+      "privileges": [
+        "SELECT" 
+      ]
+    }
+  ]
+}
+
+

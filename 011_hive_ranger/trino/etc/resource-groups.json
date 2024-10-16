@@ -1,0 +1,77 @@
+{
+    "rootGroups": [
+      {
+        "name": "restricted",
+        "softMemoryLimit": "10%",
+        "hardCpuLimit":"18m",
+        "hardConcurrencyLimit": 3,
+        "maxQueued": 0,
+        "jmxExport": true
+      },
+      {
+        "name": "restricted_31_days_10_phong_dvkh",
+        "softMemoryLimit": "10%",
+        "hardCpuLimit":"18m",
+        "hardConcurrencyLimit": 3,
+        "maxQueued": 0,
+        "jmxExport": true
+      },
+      {
+        "name": "restricted_31_days_10_phong_ttvh",
+        "softMemoryLimit": "10%",
+        "hardCpuLimit":"18m",
+        "hardConcurrencyLimit": 3,
+        "maxQueued": 0,
+        "jmxExport": true
+      },
+      {
+        "name": "restricted_31_days_10_phong_clkd",
+        "softMemoryLimit": "10%",
+        "hardCpuLimit":"18m",
+        "hardConcurrencyLimit": 3,
+        "maxQueued": 0,
+        "jmxExport": true
+      },
+      {
+        "name": "restricted_31_days_10_phong_ctylog",
+        "softMemoryLimit": "10%",
+        "hardCpuLimit":"18m",
+        "hardConcurrencyLimit": 3,
+        "maxQueued": 0,
+        "jmxExport": true
+      },
+      {
+        "name": "priority",
+        "softMemoryLimit": "100%",
+        "hardConcurrencyLimit": 1000,
+        "maxQueued": 10000,
+        "jmxExport": true
+      }
+    ],
+    "selectors": [
+      {
+        "userGroup": "hive_small",
+        "group": "restricted"
+      },
+      {
+        "userGroup": "phong_dvkh",
+        "group": "restricted_31_days_10_phong_dvkh"
+      },
+      {
+        "userGroup": "phong_ttvh",
+        "group": "restricted_31_days_10_phong_ttvh"
+      },
+      {
+        "userGroup": "phong_clkd",
+        "group": "restricted_31_days_10_phong_clkd"
+      },
+      {
+        "userGroup": "phong_ctylog",
+        "group": "restricted_31_days_10_phong_ctylog"
+      },
+      {
+        "group": "priority"
+      }
+    ],
+    "cpuQuotaPeriod": "1h"
+}

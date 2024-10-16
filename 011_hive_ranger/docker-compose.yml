@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+
+  unsecure:
+    image: longpt233/hadoop:insecure
+    container_name: dragoninsecure
+    # command: /wait-for-hive.sh postgres /entrypoint.sh
+    hostname: hadoop112
+    ports:
+      - "50071:50070" # datanode
+      - "50075:50075" # namenode
+      - "9870:9870"   # for 3x
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.12
+
+  postgres:
+    image: docker.io/library/postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgre/.tmp/postgres/data:/var/lib/postgresql/data
+      - ./postgre/entrypoint-sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hive  -d hive"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.13
+
+  trino-coord:
+    image: longpt233/trino:standalone
+    container_name: trinovip
+    hostname: trino114
+    entrypoint: ["/entrypoint-coord.sh"]
+    ports:
+      - "8081:8080" # datanode
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.14
+
+  trino-worker:
+    image: longpt233/trino:standalone
+    container_name: trinonormal
+    entrypoint: ["/entrypoint-worker.sh"]
+    hostname: trino115
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.15
+
+networks:
+    cluster-hadoop:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.25.0.0/16

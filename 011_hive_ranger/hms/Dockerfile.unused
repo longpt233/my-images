@@ -1,0 +1,33 @@
+ARG BASE_VERSION
+
+FROM $BASE_VERSION
+
+WORKDIR /
+
+USER root
+
+
+# https://archive.apache.org/dist/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
+COPY apache-hive-3.1.3-bin.tar.gz /tmp/apache-hive-3.1.3-bin.tar.gz
+
+# hive standalone hinh nhu truoc bi thieu lib -> cai full di
+RUN set -x && tar -xvf /tmp/apache-hive-3.1.3-bin.tar.gz -C /tmp/ \
+    && mv /tmp/apache-hive-3.1.3-bin /usr/local/hive \
+    && rm /tmp/apache-hive-3.1.3-bin.tar.gz
+
+
+COPY hms/hive-site.xml /usr/local/hive/conf/hive-site.xml
+COPY postgresql-42.5.4.jar /usr/local/hive/lib/postgresql-42.5.4.jar
+
+
+RUN cp /usr/local/hive/conf/hive-log4j2.properties.template /usr/local/hive/conf/hive-log4j2.properties
+
+RUN cd /usr/local/hive \
+&& cp lib/postgresql-9.4.1208.jre7.jar lib/postgresql-9.4.1208.jre7.jar.bk 
+
+# RUN sed -i 's/^java.arg.2=.*/java.arg.2=-Xms5g/' ${NIFI_HOME}/conf/bootstrap.conf
+
+ADD hms/entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
