@@ -53,6 +53,27 @@ ADD trino/entrypoint-worker.sh /entrypoint-worker.sh
 RUN chmod a+x /entrypoint-worker.sh
 
 
+# local tar
+COPY ranger-3.0.0-SNAPSHOT-trino-plugin.tar.gz /tmp/ranger-3.0.0-SNAPSHOT-trino-plugin.tar.gz
+
+RUN set -x && tar -xvf /tmp/ranger-3.0.0-SNAPSHOT-trino-plugin.tar.gz -C /tmp/ \
+    && mv /tmp/ranger-3.0.0-SNAPSHOT-trino-plugin /opt/trino-ranger-plugin \
+    && rm /tmp/ranger-3.0.0-SNAPSHOT-trino-plugin.tar.gz
+
+RUN sed -i 's|^POLICY_MGR_URL=.*|POLICY_MGR_URL=http://172.25.1.16:6080|'  /opt/trino-ranger-plugin/install.properties
+RUN sed -i 's|^REPOSITORY_NAME=.*|REPOSITORY_NAME=trino-repo|'  /opt/trino-ranger-plugin/install.properties
+RUN sed -i 's|^COMPONENT_INSTALL_DIR_NAME=.*|COMPONENT_INSTALL_DIR_NAME=/usr/local/trino|'  /opt/trino-ranger-plugin/install.properties
+RUN sed -i 's|^XAAUDIT.HDFS.IS_ENABLED=.*|XAAUDIT.HDFS.IS_ENABLED=false|'  /opt/trino-ranger-plugin/install.properties
+
+RUN sed -i 's|^CUSTOM_USER=.*|CUSTOM_USER=root|'  /opt/trino-ranger-plugin/install.properties
+RUN sed -i 's|^CUSTOM_GROUP=.*|CUSTOM_GROUP=root|'  /opt/trino-ranger-plugin/install.properties
+
+RUN echo -e  "\n\nXAAUDIT.SUMMARY.ENABLE=false" >>   /opt/trino-ranger-plugin/install.properties
+
+
+
+RUN cd /opt/trino-ranger-plugin 
+
 
 
 

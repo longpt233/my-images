@@ -2,6 +2,19 @@ version: "3"
 
 services:
 
+  ranger-admin:
+    image: longpt233/ranger:admin
+    container_name: dragonranger
+    hostname: hadoop116
+    ports:
+      - "6080:6080" 
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.16
+
   unsecure:
     image: longpt233/hadoop:insecure
     container_name: dragoninsecure
@@ -20,6 +33,7 @@ services:
 
   postgres:
     image: docker.io/library/postgres:latest
+    container_name: dragondb
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456

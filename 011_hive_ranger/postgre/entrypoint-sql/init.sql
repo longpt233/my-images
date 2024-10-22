@@ -5,4 +5,4 @@ GRANT ALL PRIVILEGES ON DATABASE hive TO hive;
 GRANT ALL ON SCHEMA public TO hive;
 ALTER DATABASE hive OWNER TO hive;
 
-# chu y khi import db bang user hive thif can chuyen lai quyen cho db neu k import lai se bi loi 
+-- chu y khi import db bang user hive thif can chuyen lai quyen cho db neu k import lai se bi loi 

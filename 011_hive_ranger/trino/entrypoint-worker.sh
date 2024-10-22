@@ -22,7 +22,7 @@ export JAVA_HOME=/usr/local/java && export TRINO_HOME=/usr/local/trino
 /usr/local/trino/bin/launcher start
 
 sleep 3
-tail -f 1000  /var/trino/data/var/log/server.log
+tail -f 1000  /var/trino/data/var/log/server.log | grep ERROR
 
 
 #tail -f /dev/null
