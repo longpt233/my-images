@@ -19,6 +19,7 @@ build:
 	@docker build --build-arg BASE_VERSION=${USER}/${UBUNTU_NAME}:${UBUNTU_VER} -f ./hadoop-insecure/Dockerfile -t ${USER}/${HADOOP_NAME}:${HADOOP_VER} .
 	@echo "build ${TRINO_NAME}:${TRINO_VER}"
 	@docker build --build-arg BASE_VERSION=${USER}/${UBUNTU_NAME}:${UBUNTU_VER} -f ./trino/Dockerfile -t ${USER}/${TRINO_NAME}:${TRINO_VER} .
+	@docker build -f ./ranger/Dockerfile -t ${USER}/ranger:admin .
 
 build-base: 
 	@echo "build ${UBUNTU_NAME}:${UBUNTU_VER}"
@@ -28,9 +29,9 @@ build-hadoop-hms:
 	@echo "build ${HADOOP_NAME}:${HADOOP_VER}"
 	@docker build --build-arg BASE_VERSION=${USER}/${UBUNTU_NAME}:${UBUNTU_VER} -f ./hadoop-insecure/Dockerfile -t ${USER}/${HADOOP_NAME}:${HADOOP_VER} .
 
-build-hms:
-	@echo "build ${HMS_NAME}:${HMS_VER}"
-	@docker build --build-arg BASE_VERSION=${USER}/${UBUNTU_NAME}:${UBUNTU_VER} -f ./hms/Dockerfile -t ${USER}/${HMS_NAME}:${HMS_VER} .
+# build-hms:
+# 	@echo "build ${HMS_NAME}:${HMS_VER}"
+# 	@docker build --build-arg BASE_VERSION=${USER}/${UBUNTU_NAME}:${UBUNTU_VER} -f ./hms/Dockerfile -t ${USER}/${HMS_NAME}:${HMS_VER} .
 
 build-trino:
 	@echo "build ${TRINO_NAME}:${TRINO_VER}"

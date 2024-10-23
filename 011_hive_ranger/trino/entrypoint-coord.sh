@@ -28,6 +28,8 @@ java -version
 
 cd /opt/trino-ranger-plugin && ./enable-trino-plugin.sh  
 
+sed -i 's|^security|#security|'  /usr/local/trino/etc/access-control.properties
+
 /usr/local/trino/bin/launcher start
 # neu loi thi xem file nay truoc ?
 # tail -n 1000  /var/trino/data/var/log/launcher.log
@@ -37,7 +39,8 @@ cat /opt/trino-ranger-plugin/install.properties
  
 
 sleep 3
-tail -f 1000  /var/trino/data/var/log/server.log | grep ERROR
+tail -f 1000  /var/trino/data/var/log/server.log 
+# | grep ERROR
 
 tail -f /dev/null
 

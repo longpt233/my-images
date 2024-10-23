@@ -28,7 +28,7 @@ mongodb/data
 *postgresql-42.5.4.jar
 011_hive_ranger/postgre/.tmp
 *jdk-17_linux-x64_bin.tar.gz
-011_hive_ranger/*.tar.gz
+011_hive_ranger/*.tar.gz*
 
 009_hadoop_authen/nifi/conf
 
