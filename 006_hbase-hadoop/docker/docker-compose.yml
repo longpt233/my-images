@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  hadoop:
+    image: longpt233/hadoop-insecure:0.0.1
+    container_name: dragoninsecure
+    hostname: hadoop112
+    ports:
+      - "50071:50070" # datanode
+      - "50075:50075" # namenode
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.12
+
+  hbase:
+    image: longpt233/hbase:0.0.1
+    container_name: dragonhbase
+    hostname: hadoop113
+    ports:
+      - "16010:16010" # hmaster
+    networks:
+        cluster-hadoop:
+          ipv4_address: 172.25.1.13
+
+
+networks:
+    cluster-hadoop:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.25.0.0/16
+

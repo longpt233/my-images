@@ -20,7 +20,8 @@ mongodb/data
 
 *apt.conf
 *nifi-1.20.0-bin.zip
-
+006_hbase-hadoop/docker/hadoop-3.3.5.tar.gz
+006_hbase-hadoop/docker/hbase-2.4.17-bin.tar.gz
 
 *hadoop-3.3.5.tar.gz
 *hive-standalone-metastore-3.0.0-bin.tar.gz

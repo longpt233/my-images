@@ -6,6 +6,9 @@ USER := "longpt233"
 
 build: 
 	@echo "build ${IMAGE_NAME}:${VER}"
-	@docker build -f ./hbase/Dockerfile  -t ${USER}/${HBASE_IMAGE_NAME}:${VER} . 
 	@docker build -f ./hadoop/Dockerfile -t ${USER}/${HADOOP_IMAGE_NAME}:${VER} .
+	@docker build -f ./hbase/Dockerfile  -t ${USER}/${HBASE_IMAGE_NAME}:${VER} . 
+
+test:
+	@docker run -it ${USER}/${HBASE_IMAGE_NAME}:${VER}
 

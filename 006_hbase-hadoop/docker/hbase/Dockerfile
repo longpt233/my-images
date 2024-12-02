@@ -1,56 +1,36 @@
 FROM longpt233/ubuntu-base:2.0.0
 # ban base nay da co ssh + java 8
 
-
-
 WORKDIR /
 
 USER root
 
-# install hadoop
-# ARG HADOOP_VERSION=3.2.4
-# ARG HADOOP_TAR=hadoop-$HADOOP_VERSION.tar.gz
-# ARG HADOOP_URL="https://mirror.downloadvn.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/${HADOOP_TAR}"
-# LABEL Description="Hadoop Dev" \
-#     "Hadoop Version"="$HADOOP_VERSION"
-# RUN set -x \
-#     && curl -fSL "$HADOOP_URL" -o /tmp/${HADOOP_TAR} \
-#     && tar -xvf /tmp/${HADOOP_TAR} 
 
 # local tar
-COPY hadoop-3.3.5.tar.gz /tmp/hadoop-3.3.5.tar.gz
+COPY hbase-2.4.17-bin.tar.gz /tmp/hbase-2.4.17-bin.tar.gz
 
-RUN set -x && tar -xvf /tmp/hadoop-3.3.5.tar.gz -C /tmp/ \
-    && mv /tmp/hadoop-3.3.5 /usr/local/hadoop \
-    && rm /tmp/hadoop-3.3.5.tar.gz
+RUN set -x && tar -xvf /tmp/hbase-2.4.17-bin.tar.gz -C /tmp/ \
+    && mv /tmp/hbase-2.4.17 /usr/local/hbase \
+    && rm /tmp/hbase-2.4.17-bin.tar.gz
 
 # end local tar
 
-ENV HADOOP_HOME=/usr/local/hadoop 
-ENV PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin 
+ENV HBASE_HOME=/usr/local/hbase 
+# ENV PATH=$PATH:/usr/local/hbase/bin:/usr/local/hbase/sbin 
 
-ENV HDFS_NAMENODE_USER=root
-ENV HDFS_DATANODE_USER=root
-ENV HDFS_SECONDARYNAMENODE_USER=root
 
-RUN mkdir -p ~/hdfs/namenode && \ 
-    mkdir -p ~/hdfs/datanode && \
-    mkdir $HADOOP_HOME/logs
+COPY hbase/* /tmp/
 
-COPY hadoop-insecure/* /tmp/
+RUN mv /tmp/hbase-env.sh $HBASE_HOME/conf/hbase-env.sh \
+    && mv /tmp/hbase-site.xml $HBASE_HOME/conf/hbase-site.xml 
+    # && mv /tmp/regionservers $HBASE_HOME/conf/regionservers
 
-RUN mv /tmp/hadoop-env.sh $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
-    && mv /tmp/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml \
-    && mv /tmp/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
+# sed "s/<\/configuration>/<property>\n<name>hbase.rootdir<\/name>\n<value>hdfs:\/\/'$c':54310\/hbase<\/value>\n<\/property>\n
+# <property>\n<name>hbase.cluster.distributed<\/name>\n<value>true<\/value>\n<\/property>\n
+# <property>\n<name>hbase.zookeeper.property.clientPort<\/name>\n<value>2181<\/value>\n<\/property>\n
+# <property>\n<name>hbase.zookeeper.quorum<\/name>\n<value>'$c'<\/value>\n<\/property>\n<\/configuration>/g" -i.bak hbase/conf/hbase-site.xml
 
-EXPOSE  50070 50075 8042 8088 9000 9870 8020 8485 22
-
-ADD hadoop-insecure/entrypoint.sh /entrypoint.sh
+ADD hbase/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
-# chay cho lan dau tien thoi 
-RUN $HADOOP_HOME/bin/hdfs namenode -format  
-
 ENTRYPOINT [ "/entrypoint.sh" ]
-
-# CMD [ "sh", "-c", "service ssh start; bash"]

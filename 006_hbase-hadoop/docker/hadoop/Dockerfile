@@ -37,7 +37,7 @@ RUN mkdir -p ~/hdfs/namenode && \
     mkdir -p ~/hdfs/datanode && \
     mkdir $HADOOP_HOME/logs
 
-COPY hadoop-insecure/* /tmp/
+COPY hadoop/* /tmp/
 
 RUN mv /tmp/hadoop-env.sh $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
     && mv /tmp/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml \
@@ -45,7 +45,7 @@ RUN mv /tmp/hadoop-env.sh $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
 
 EXPOSE  50070 50075 8042 8088 9000 9870 8020 8485 22
 
-ADD hadoop-insecure/entrypoint.sh /entrypoint.sh
+ADD hadoop/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
 # chay cho lan dau tien thoi 
