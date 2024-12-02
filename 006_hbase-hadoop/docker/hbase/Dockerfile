@@ -1,5 +1,24 @@
-FROM longpt233/ubuntu-base:2.0.0
-# ban base nay da co ssh + java 8
+FROM ubuntu:20.04
+
+USER root
+WORKDIR /
+
+
+ADD apt.conf /etc/apt/apt.conf.d/10apt.conf
+
+# install supported tools
+RUN apt-get update
+RUN apt-get install -y \
+    curl \
+    net-tools \
+    telnet \
+    iputils-ping \
+    nano \
+    ssh \
+    krb5-user \
+    openjdk-8-jdk \
+    sudo  \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
 
@@ -32,5 +51,27 @@ RUN mv /tmp/hbase-env.sh $HBASE_HOME/conf/hbase-env.sh \
 
 ADD hbase/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
+
+
+# local tar
+COPY phoenix-hbase-2.4-5.1.3-bin.tar.gz /tmp/phoenix-hbase-2.4-5.1.3-bin.tar.gz
+
+# RUN cp /tmp/phoenix-hbase-2.4-5.1.3-bin.tar.gz $HBASE_HOME/lib
+
+RUN set -x && tar -xvf /tmp/phoenix-hbase-2.4-5.1.3-bin.tar.gz -C /tmp/ \
+    && mv /tmp/phoenix-hbase-2.4-5.1.3-bin /usr/local/phoenix \
+    && rm /tmp/phoenix-hbase-2.4-5.1.3-bin.tar.gz
+
+ENV PHOENIX_HOME=/usr/local/phoenix
+ENV PATH=$PATH:$PHOENIX_HOME/bin 
+
+RUN cp /usr/local/phoenix/phoenix-server-hbase-2.4-5.1.3.jar $HBASE_HOME/lib
+RUN sed -i 's|#!/usr/bin/env python|#!/usr/bin/python3|g' /usr/local/phoenix/bin/sqlline.py 
+
+ADD hadoop/hdfs-site.xml /hdfs-site.xml
+RUN cp  /hdfs-site.xml /usr/local/hbase/conf/hdfs-site.xml
+
+ENV TZ "Asia/Ho_Chi_Minh"
+RUN date
 
 ENTRYPOINT [ "/entrypoint.sh" ]

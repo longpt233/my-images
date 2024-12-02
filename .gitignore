@@ -37,3 +37,9 @@ mongodb/data
 
 *wgetrc
 
+204_datahub/datahub-0.13.3
+204_datahub/v0.13.3.zip
+
+204_datahub/docker
+
+006_hbase-hadoop/docker/phoenix-hbase-2.4-5.1.3-bin.tar.gz
