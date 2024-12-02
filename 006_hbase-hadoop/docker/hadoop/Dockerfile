@@ -1,48 +1,56 @@
-FROM ubuntu:20.04
+FROM longpt233/ubuntu-base:2.0.0
+# ban base nay da co ssh + java 8
 
-WORKDIR /root
 
-# install openssh-server, openjdk and wget
-RUN apt-get update && apt-get install -y openssh-server openjdk-8-jdk wget
 
-# install hadoop 2.7.2
-RUN wget https://dlcdn.apache.org/hadoop/common/hadoop-3.2.4/hadoop-3.2.4.tar.gz && \
-    tar -xzvf hadoop-3.2.4.tar.gz && \
-    mv hadoop-3.2.4 /usr/local/hadoop && \
-    rm hadoop-3.2.4.tar.gz
+WORKDIR /
 
-# set environment variable
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 
+USER root
+
+# install hadoop
+# ARG HADOOP_VERSION=3.2.4
+# ARG HADOOP_TAR=hadoop-$HADOOP_VERSION.tar.gz
+# ARG HADOOP_URL="https://mirror.downloadvn.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/${HADOOP_TAR}"
+# LABEL Description="Hadoop Dev" \
+#     "Hadoop Version"="$HADOOP_VERSION"
+# RUN set -x \
+#     && curl -fSL "$HADOOP_URL" -o /tmp/${HADOOP_TAR} \
+#     && tar -xvf /tmp/${HADOOP_TAR} 
+
+# local tar
+COPY hadoop-3.3.5.tar.gz /tmp/hadoop-3.3.5.tar.gz
+
+RUN set -x && tar -xvf /tmp/hadoop-3.3.5.tar.gz -C /tmp/ \
+    && mv /tmp/hadoop-3.3.5 /usr/local/hadoop \
+    && rm /tmp/hadoop-3.3.5.tar.gz
+
+# end local tar
+
 ENV HADOOP_HOME=/usr/local/hadoop 
 ENV PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin 
 
-# ssh without key
-RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' && \
-    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+ENV HDFS_NAMENODE_USER=root
+ENV HDFS_DATANODE_USER=root
+ENV HDFS_SECONDARYNAMENODE_USER=root
 
 RUN mkdir -p ~/hdfs/namenode && \ 
     mkdir -p ~/hdfs/datanode && \
     mkdir $HADOOP_HOME/logs
 
-COPY config/* /tmp/
+COPY hadoop-insecure/* /tmp/
 
-RUN mv /tmp/ssh_config ~/.ssh/config && \
-    mv /tmp/hadoop-env.sh /usr/local/hadoop/etc/hadoop/hadoop-env.sh && \
-    mv /tmp/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml && \ 
-    mv /tmp/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml && \
-    mv /tmp/mapred-site.xml $HADOOP_HOME/etc/hadoop/mapred-site.xml && \
-    mv /tmp/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml && \
-    mv /tmp/workers $HADOOP_HOME/etc/hadoop/workers && \
-    mv /tmp/start-hadoop.sh ~/start-hadoop.sh && \
-    mv /tmp/run-wordcount.sh ~/run-wordcount.sh
+RUN mv /tmp/hadoop-env.sh $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
+    && mv /tmp/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml \
+    && mv /tmp/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 
-RUN chmod +x ~/start-hadoop.sh && \
-    chmod +x ~/run-wordcount.sh && \
-    chmod +x $HADOOP_HOME/sbin/start-dfs.sh && \
-    chmod +x $HADOOP_HOME/sbin/start-yarn.sh 
+EXPOSE  50070 50075 8042 8088 9000 9870 8020 8485 22
 
-# format namenode
-RUN /usr/local/hadoop/bin/hdfs namenode -format
+ADD hadoop-insecure/entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
 
-CMD [ "sh", "-c", "service ssh start; bash"]
+# chay cho lan dau tien thoi 
+RUN $HADOOP_HOME/bin/hdfs namenode -format  
 
+ENTRYPOINT [ "/entrypoint.sh" ]
+
+# CMD [ "sh", "-c", "service ssh start; bash"]
