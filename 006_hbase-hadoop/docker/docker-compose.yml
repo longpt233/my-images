@@ -18,6 +18,7 @@ services:
     hostname: hadoop113
     ports:
       - "16010:16010" # hmaster
+      - "18080:18080" 
     networks:
         cluster-hadoop:
           ipv4_address: 172.25.1.13
