@@ -1,0 +1,83 @@
+
+#  Copyright 2019 ABSA Group Limited
+#
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+version: '3.8'
+services:
+  arangodb:
+    image: arangodb:3.10
+    restart: on-failure
+    ports:
+      - 8530:8529
+    environment:
+      ARANGO_NO_AUTH: 1
+
+  rest_server:
+    image: absaoss/spline-rest-server:0.7.8
+    restart: on-failure
+    ports:
+      - 8089:8080
+    environment:
+      SPLINE_DATABASE_CONNECTION_URL: 'arangodb://arangodb/spline'
+      # by default /dev/random is used which may block
+      CATALINA_OPTS: "-Dsecurerandom.source=file:/dev/./urandom -Djava.security.egd=file:/dev/./urandom"
+    depends_on:
+      db_init:
+        condition: service_completed_successfully
+
+  db_init:
+    image: absaoss/spline-admin:0.7.8
+    restart: on-failure
+    entrypoint: >
+      tini -g -- bash -c "
+        until curl --output /dev/null --silent --get --fail http://arangodb:8529/_admin/server/availability
+        do
+          echo waiting for ArangoDB server to be ready...
+          sleep 5
+        done
+        exec bash ./entrypoint.sh db-init arangodb://arangodb/spline -s
+      "
+    depends_on:
+      - arangodb
+
+  run_examples:
+    image: absaoss/spline-spark-agent:2.0.0
+    entrypoint: >
+      tini -g -- bash -c "
+        if [ ! -z "$SEED" ]
+        then
+          until curl --output /dev/null --silent --get --fail http://rest_server:8080
+          do
+            echo waiting for Spline server to be ready...
+            sleep 5
+          done
+          exec /entrypoint.sh
+        fi
+      "
+    environment:
+      SEED: 1
+      SPLINE_PRODUCER_URL: 'http://rest_server:8080/producer'
+    depends_on:
+      - rest_server
+
+  ui:
+    image: absaoss/spline-web-ui:0.7.5
+    restart: on-failure
+    environment:
+      # The consumer URL is used by the web browser
+      SPLINE_CONSUMER_URL: 'http://localhost:8089/consumer'
+      # by default /dev/random is used which may block
+      CATALINA_OPTS: "-Dsecurerandom.source=file:/dev/./urandom -Djava.security.egd=file:/dev/./urandom"
+    ports:
+      - 9090:8080
+    depends_on:
+      - rest_server
