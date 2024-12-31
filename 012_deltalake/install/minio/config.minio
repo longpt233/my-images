@@ -1,0 +1,83 @@
+# /etc/default/minio
+
+# MINIO_ROOT_USER and MINIO_ROOT_PASSWORD sets the root account for the MinIO server.
+# This user has unrestricted permissions to perform S3 and administrative API operations on any resource in the deployment.
+# Omit to use the default values 'minioadmin:minioadmin'.
+# MinIO recommends setting non-default values as a best practice, regardless of environment
+
+MINIO_ROOT_USER=myminioadmin
+MINIO_ROOT_PASSWORD=minio-secret-key-change-me
+
+# 1. cấu hình single-node single-drive
+# MINIO_VOLUMES sets the storage volumes or paths to use for the MinIO server.
+MINIO_VOLUMES="/mnt/data"
+
+# 2. cấu hình single-node multi-drive
+# CHANGEME : chỉ cần đổi config này để chạy multi drives
+# The specified path uses MinIO expansion notation to denote a sequential series of drives between 1 and 4, inclusive.
+# All drives or paths included in the expanded drive list must exist *and* be empty or freshly formatted for MinIO to start successfully.
+# MINIO_VOLUMES="/data-{1...4}"
+
+# 3. cấu hình multi-node multi-drive. một cụm này (4 node) còn gọi là 1 single server pool
+# CHANGEME đổi cấu hình này để chạy multi-node
+# MINIO_VOLUMES="https://minio{1...4}.example.net:9000/mnt/disk{1...4}/minio"
+# nhớ phải add host ? còn đâu đọc trong bài nó là hostname luôn
+# cổng mặc định của MinIO server là 9000
+
+# cấu hình cluster: gồm nhiều single server pool
+# minio server https://minio{1...4}.example.net/mnt/disk{1...4} https://minio{5...8}.example.net/mnt/disk{1...4}
+# các thao tác với cụm chi tiếp xem trên doc
+
+# 4. cấu hình site replication
+
+# TODO: cần tạo user và path + phân quyền
+# groupadd -r minio-user
+# useradd -M -r -g minio-user minio-user
+# chown minio-user:minio-user /mnt/disk1 /mnt/disk2 /mnt/disk3 /mnt/disk4
+
+# không dùng network storage 
+# Direct-Attached Storage (DAS) has significant performance and consistency advantages over networked storage (NAS, SAN, NFS)
+# TODO nhớ là mapping 
+# Use /etc/fstab to ensure consistent drive-to-mount mapping across node reboots.
+
+# MINIO_OPTS sets any additional commandline options to pass to the MinIO server.
+# For example, `--console-address :9001` sets the MinIO Console listen port
+MINIO_OPTS="--console-address :9001"
+
+# MINIO_OPTS=' --console-address=":9001" --ftp="address=:8021" --ftp="passive-port-range=30000-40000" '
+# if run from cmd: 
+# export MINIO_OPTS=' --console-address=":9001" --ftp="address=:8021" --ftp="passive-port-range=30000-40000" '
+# minio server $MINIO_OPTS ...
+
+
+# cấu hình bằng lệnh (mc- minio client)
+# mc admin config set
+
+
+# Core Settings
+# MINIO_OPTS
+# MINIO_VOLUMES
+# MINIO_CONFIG_ENV_FILE, MINIO_ILM_EXPIRY_WORKERS
+# MINIO_DOMAIN
+# MINIO_SCANNER_SPEED
+# MINIO_BATCH_REPLICATION_WORKERS
+# MINIO_COMPRESSION_ENABLE, MINIO_COMPRESSION_EXTENSIONS, MINIO_COMPRESSION_ALLOW_ENCRYPTION
+
+# Erasure Stripe Size
+# The erasure set size to apply for all drives in a given server pool.
+# MINIO_ERASURE_SET_DRIVE_COUNT : khởi tạo cluster lần đầu, không sửa được. 
+# Do not change the stripe size setting unless directed to by MinIO engineering.
+
+
+# Erasure Code Settings
+#  storage_class standard    (STANDARD storage class )
+#  Erasure Set Size    Default Parity (EC:N)
+#  1                   EC:0
+#  2-3                 EC:1
+#  4-5                 EC:2
+#  6-7                 EC:3
+#  8-16                EC:4     max = Erasure Set Size /2 
+
+#   storage_class rrs    (REDUCED storage class)  
+# EC:M    where M refers to the number of parity blocks to create for the object.
+# This value must be less than or equal to MINIO_STORAGE_CLASS_STANDARD.
