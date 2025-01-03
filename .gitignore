@@ -44,3 +44,12 @@ mongodb/data
 
 006_hbase-hadoop/docker/phoenix-hbase-2.4-5.1.3-bin.tar.gz
 006_hbase-hadoop/docker/*.jar
+
+012_deltalake/docker/nginx/certs/PrivateKey.key
+012_deltalake/docker/nginx/certs/PublicKey.crt
+012_deltalake/docker/data
+
+012_deltalake/docker/spark-delta/*.jar
+
+012_deltalake/docker/spark-delta/.ipynb_checkpoints
+012_deltalake/docker/spark-delta/secret.ini
