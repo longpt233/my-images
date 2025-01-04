@@ -1,0 +1,1 @@
+delta phục vụ bài toán long term chậm hơn paimon do cơ chế 
