@@ -1,0 +1,9 @@
+---
+server:
+    port: 8080
+
+spring:
+    datasource:
+        url: jdbc:postgresql://postgres:5432/postgres?currentSchema=debezium_postgres_demo
+        username: postgres
+        password: postgres

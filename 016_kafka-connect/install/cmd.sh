@@ -1,0 +1,1 @@
+/opt/kafka/bin/connect-distributed.sh /opt/kafka/config/connect-distributed.properties

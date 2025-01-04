@@ -1,0 +1,1 @@
+https://github.com/sanogotech/minIO-trino-hive-docker

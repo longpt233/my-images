@@ -1,0 +1,9 @@
+spring:
+    datasource:
+        driverClassName: org.h2.Driver
+        url: jdbc:h2:mem:testdb;SCHEMA_SEARCH_PATH=debezium_postgres_demo;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: none
+            show_sql: true

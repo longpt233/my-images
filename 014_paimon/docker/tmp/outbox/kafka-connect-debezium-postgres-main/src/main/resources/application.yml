@@ -1,0 +1,29 @@
+spring:
+    application:
+        name: demo
+    datasource:
+        driverClassName: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/postgres?currentSchema=debezium_postgres_demo
+        username: postgres
+        password: postgres
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        properties:
+            hibernate:
+                default_schema: debezium_postgres_demo
+        hibernate:
+            ddl-auto: validate
+        generate-ddl: false
+    data:
+        rest:
+            detection-strategy: annotated
+    flyway:
+        schemas: debezium_postgres_demo
+
+server:
+    port: 9001
+
+demo:
+    outbox:
+        item:
+            destination: "item"
