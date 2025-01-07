@@ -54,6 +54,12 @@ RUN mv /tmp/hbase-env.sh $HBASE_HOME/conf/hbase-env.sh \
 # <property>\n<name>hbase.zookeeper.property.clientPort<\/name>\n<value>2181<\/value>\n<\/property>\n
 # <property>\n<name>hbase.zookeeper.quorum<\/name>\n<value>'$c'<\/value>\n<\/property>\n<\/configuration>/g" -i.bak hbase/conf/hbase-site.xml
 
+# k cần cấu hình zoo nữa để mặc định 
+# root@c8d08dc9259e:/# cat /usr/local/hbase/conf/
+# hadoop-metrics2-hbase.properties  hbase-env.sh                      hbase-site.xml                    log4j-hbtop.properties            regionservers
+# hbase-env.cmd                     hbase-policy.xml                  hdfs-site.xml                     log4j.properties 
+# 2025-01-07 11:08:21,898 INFO  [main] persistence.FileTxnSnapLog: Snapshotting: 0x0 to /tmp/hbase-root/zookeeper/version-2/snapshot.0
+
 ADD hbase/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 

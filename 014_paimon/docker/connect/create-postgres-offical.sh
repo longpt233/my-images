@@ -87,3 +87,11 @@ my_database=> SELECT * FROM pg_stat_replication_slots;
  debezium_person |          0 |           0 |           0 |           0 |            0 |            0 |          1 |         148 | 
 (1 row)
 
+
+#  
+my_database=> SELECT * FROM pg_stat_replication;
+ pid  | usesysid | usename  |  application_name  | client_addr | client_hostname | client_port |         backend_start         | backend_xmin | state | sent_lsn | write_lsn | flush_lsn | replay_lsn | write_lag | flush_lag | replay_lag | sync_priority | sync_state | reply_time 
+------+----------+----------+--------------------+-------------+-----------------+-------------+-------------------------------+--------------+-------+----------+-----------+-----------+------------+-----------+-----------+------------+---------------+------------+------------
+ 6606 |    17264 | data_etl | Debezium Streaming | 172.21.0.1  |                 |       59396 | 2025-01-07 03:04:54.449307+00 |              |       |          |           |           |            |           |           |            |               |            | 
+(1 row)
+
