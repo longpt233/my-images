@@ -1,0 +1,29 @@
+{
+    "name": "dwh.mydatabase.person",
+    "config": {
+        "topic.prefix": "dbz",
+        "database.hostname": "10.208.164.167",
+        "database.port":"5431",
+        "database.user": "data_etl",
+        "database.password": "data_etl",
+        "database.dbname": "my_database",
+        "schema.include.list": "public",
+        "table.include.list": "public.person",
+        "heartbeat.interval.ms": 30000,
+        "heartbeat.action.query": "select * from public.person where id = 10001",
+        "query.fetch.size": 500,
+        "topic.creation.groups": "debezium-etl",
+        "topic.creation.debezium-etl.include": "",
+        "topic.creation.debezium-etl.exclude": "",
+        "topic.creation.default.partitions": -1,
+        "topic.creation.default.replication.factor": -1,
+        "plugin.name": "pgoutput",
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "tasks.max": "1",
+        "skipped.operations": "r",
+        "snapshot.mode": "never",
+        "slot.name": "debezium_person",
+        "publication.autocreate.mode": "filtered",
+        "publication.name": "dbz_pub"
+    }
+}

@@ -1,0 +1,1 @@
+https://github.com/macneib/kafka-connect-distributed-poc

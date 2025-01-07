@@ -1,0 +1,23 @@
+{
+    "name": "vtp_user",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "tasks.max": "1",
+        "plugin.name": "pgoutput",
+        "slot.name": "vtp_user",
+        "publication.autocreate.mode": "filtered",
+        "publication.name": "vtp_user",
+        "database.hostname": "127.0.0.1",
+        "database.port": "5432",
+        "database.user": "test_rep",
+        "database.password": "test_rep",
+        "database.dbname": "vtp_user",
+        "table.include.list": "vtp_user.user,vtp_user.department",
+        "database.server.name": "DBTestServer",
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "key.converter.schemas.enable": "false",
+        "value.converter.schemas.enable": "false",
+        "topic.prefix": "vtp_user"
+    }
+}

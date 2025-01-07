@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+ # Flink Job Manager
+  jobmanager:
+    image: flink:1.20.0
+    container_name: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - HADOOP_CLASSPATH='hadoop classpath'
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+      - AWS_DEFAULT_REGION=us-east-1
+      - S3_ENDPOINT=http://minio:9000
+      - S3_PATH_STYLE_ACCESS=true
+    extra_hosts:
+      - "hive-metastore:172.20.0.5"
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    volumes:
+      - ./jars/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar:/opt/flink/lib/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar
+      - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
+      - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
+      - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
+      - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
+      - ./hive-site.xml:/opt/flink/conf/hive-site.xml
+    deploy:
+          replicas: 1
+    networks:
+      paimon-network:
+        ipv4_address: 172.20.2.1
+  
+
+  taskmanager:
+    image: flink:1.20.0
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - HADOOP_CLASSPATH='hadoop classpath'
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+      - AWS_DEFAULT_REGION=us-east-1
+      - S3_ENDPOINT=http://minio:9000
+      - S3_PATH_STYLE_ACCESS=true
+    extra_hosts:
+      - "hive-metastore:172.20.0.5"
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    volumes:
+      - ./jars/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar:/opt/flink/lib/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar
+      - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
+      - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
+      - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
+      - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
+      - ./hive-site.xml:/opt/flink/conf/hive-site.xml
+    deploy:
+          replicas: 6
+    networks:
+      - paimon-network

@@ -11,6 +11,23 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: hive_db
+    # thấy bảo là postgres 16+ là có thể đọc cdc debezium từ con rep (trước đó thì phải đọc từ promary thôi)
+    # wal_level=replica -> WARNING:  wal_level is insufficient to publish logical changes
+    # trong doc nó cx bảo là phải set về logical
+    # wal_level determines how much information is written to the WAL
+    # minimal -> replica (default) -> logical (thêm decode để làm gì nhỉ)
+    command: |
+      postgres 
+      -c wal_level=logical 
+      -c hot_standby=on 
+      -c max_wal_senders=10 
+      -c max_replication_slots=10 
+      -c hot_standby_feedback=on
+    # healthcheck:
+    #   test: [ 'CMD', 'psql', '-U', 'postgres', '-c', 'SELECT 1' ]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - my-network
 

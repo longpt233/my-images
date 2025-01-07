@@ -35,7 +35,30 @@ services:
             BOOTSTRAP_SERVERS: kafka:29092
             GROUP_ID: 1
             CONFIG_STORAGE_TOPIC: connect_configs
+            STATUS_STORAGE_TOPIC: connect_statuses
             OFFSET_STORAGE_TOPIC: connect_offsets
+            KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+            VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
         depends_on: [ kafka ]
+        healthcheck:
+          test:
+            [ 'CMD', 'curl', '--silent', '--fail', '-X', 'GET', 'http://localhost:8083/connectors', ]
+          start_period: 10s
+          interval: 10s
+          timeout: 5s
+          retries: 5
         ports:
             - "8083:8083"
+        # volume   ... thêm các thư viện cần thiết vô đây
+
+    debezium-ui:
+      image: debezium/debezium-ui:latest
+      container_name: debezium-ui
+      hostname: debezium-ui
+      depends_on:
+        debezium:
+          condition: service_healthy
+      ports:
+        - '8080:8080'
+      environment:
+        KAFKA_CONNECT_URIS: http://debezium:8083
