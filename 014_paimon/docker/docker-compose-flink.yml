@@ -8,14 +8,15 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
       - HADOOP_CLASSPATH='hadoop classpath'
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
-      - AWS_REGION=us-east-1
-      - AWS_DEFAULT_REGION=us-east-1
-      - S3_ENDPOINT=http://minio:9000
-      - S3_PATH_STYLE_ACCESS=true
+      # - AWS_ACCESS_KEY_ID=minio
+      # - AWS_SECRET_ACCESS_KEY=minio123
+      # - AWS_REGION=us-east-1
+      # - AWS_DEFAULT_REGION=us-east-1
+      # - S3_ENDPOINT=http://10.208.164.167:9000
+      # - S3_PATH_STYLE_ACCESS=true
+      # - FLINK_LOG_LEVEL=DEBUG   -> ROOT_LOG_LEVEL ?
     extra_hosts:
-      - "hive-metastore:172.20.0.5"
+      - "hive-metastore:10.208.164.167"
     ports:
       - "8081:8081"
     command: jobmanager
@@ -25,12 +26,14 @@ services:
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
       - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
+      - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
+      - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       - ./hive-site.xml:/opt/flink/conf/hive-site.xml
     deploy:
           replicas: 1
     networks:
       paimon-network:
-        ipv4_address: 172.20.2.1
+        ipv4_address: 172.27.2.10
   
 
   taskmanager:
@@ -38,14 +41,15 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
       - HADOOP_CLASSPATH='hadoop classpath'
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
-      - AWS_REGION=us-east-1
-      - AWS_DEFAULT_REGION=us-east-1
-      - S3_ENDPOINT=http://minio:9000
-      - S3_PATH_STYLE_ACCESS=true
+      # - AWS_ACCESS_KEY_ID=minio
+      # - AWS_SECRET_ACCESS_KEY=minio123
+      # - AWS_REGION=us-east-1
+      # - AWS_DEFAULT_REGION=us-east-1
+      # - S3_ENDPOINT=http://10.208.164.167:9000
+      # - S3_PATH_STYLE_ACCESS=true
+      # - FLINK_LOG_LEVEL=DEBUG
     extra_hosts:
-      - "hive-metastore:172.20.0.5"
+      - "hive-metastore:10.208.164.167"
     depends_on:
       - jobmanager
     command: taskmanager
@@ -55,8 +59,17 @@ services:
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
       - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
+      - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
+      - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       - ./hive-site.xml:/opt/flink/conf/hive-site.xml
     deploy:
-          replicas: 6
+          replicas: 2
     networks:
       - paimon-network
+
+networks:
+  paimon-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.2.0/24

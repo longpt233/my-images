@@ -53,3 +53,6 @@ mongodb/data
 
 012_deltalake/docker/spark-delta/.ipynb_checkpoints
 012_deltalake/docker/spark-delta/secret.ini
+
+014_paimon/docker/*jar
+014_paimon/docker/jars/*jar

@@ -19,6 +19,21 @@ postgres=# \dRp
 postgres=# 
 
 
+# tao bang 
+
+CREATE DATABASE my_database;
+
+select * from person;
+truncate table person;
+drop  table person;
+CREATE TABLE person (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Age INT
+);
+
+select * from public.person where id = 10001;
+
 
 # tạo nhé
 
@@ -73,10 +88,32 @@ my_database=> SELECT * FROM pg_stat_replication_slots;
 -----------------+------------+-------------+-------------+-------------+--------------+--------------+------------+-------------+-------------
  debezium_person |          0 |           0 |           0 |           0 |            0 |            0 |          0 |           0 | 
 (1 row)
-
-
-
 debezium_person -> laf slot name trong cau hinh dbz
+
+# LSN (Long Sequence Number) -> tương đương với offset của kafka trong việc check xem WAL đã tới đâu rồi
+# two hexadecimal numbers separated by a slash, e.g. 16/B374D848
+
+# debezium dùng replication slot and publications để read từ WAL
+
+# + publications là cơ chế chuyển stream change tới một thằng consumer (ở đây là debezium). có thể chỉ định (LỰA CHỌN được) publications trên bảng nào, cột nào, các action nào (DML (Data Manipulation Language) - khác với DDL (Data Definition Language))
+# nếu cho debezium quyền này thì mình có thể cấu hình lựa chọn bên phía debezium
+
+# + Replication slots
+
+
+# WAL LEVEL
+# wal_level cannot be changed without restarting the PostgreSQL server
+# wal_level determines how much information is written to the WAL
+# minimal: chỉ dữ lại log đủ để khôi phục khi crash hoặc immediate shutdown. không đủ để recover point-in-time
+# replica (default) : WAL archiving and replication. đi kèm max_wal_senders >0 . trước 9.6 thì là tương đương archive hoặc hot_standby.
+# logical: support thêm logical decoding (logical change). increase the WAL volume
+my_database=> select * from pg_settings where name ='wal_level';
+   name    | setting | unit |          category          |                    short_desc                     | extra_desc |  context   | vartype |    source    | min_val | max_val |         enumvals          | boot_val | reset_val | sourcefile | sourceline | pending_restart 
+-----------+---------+------+----------------------------+---------------------------------------------------+------------+------------+---------+--------------+---------+---------+---------------------------+----------+-----------+------------+------------+-----------------
+ wal_level | logical |      | Write-Ahead Log / Settings | Sets the level of information written to the WAL. |            | postmaster | enum    | command line |         |         | {minimal,replica,logical} | replica  | logical   |            |            | f
+(1 row)
+
+
 
 khi thêm dữ liệu -> tăng byte lên nè
 my_database=> INSERT INTO person (id, name, age) VALUES (11,'John Doe', 30);

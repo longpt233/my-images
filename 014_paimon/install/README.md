@@ -28,4 +28,17 @@ OGG CDC
 JSON 	
 aws-dms-json 	
 
-Paimon 
+Paimon dùng LMS tree để tổ chức dữ liệu
+
+
+Streaming lakehouse: các công nghệ: 
+- Spark and Apache Kudu
+- Apache Flink and Apache Hudi
+- Apache Flink and Apache Paimon
+
+https://www.alibabacloud.com/blog/apache-paimon-streaming-lakehouse-is-coming_601357
+
+Compare paimon - hudi: Paimon provides better read and write performance than Hudi and requires less memory
+
+https://www.alibabacloud.com/blog/building-a-streaming-lakehouse-performance-comparison-between-paimon-and-hudi_601013
+
