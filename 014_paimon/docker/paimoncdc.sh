@@ -1,50 +1,3 @@
-USE CATALOG default_catalog;
-
-CREATE CATALOG catalog WITH (
-    'type' = 'paimon',
-    'metastore' = 'hive',
-    'uri' = 'thrift://10.208.164.167:9083',
-    'warehouse' = 's3://datalake/paimon',
-    's3.endpoint' = 'http://10.208.164.167:9000',
-    's3.access-key' = 'minio',  
-    's3.secret-key' = 'minio123',
-    's3.path.style.access' = 'true',
-    'location-in-properties' = 'true'
-);
-
-
-USE CATALOG catalog;
-
-CREATE DATABASE medallion;
-
-USE medallion;
-
-CREATE TABLE bronze (
-    event_id STRING,
-    user_id STRING,
-    event_type STRING,
-    event_timestamp TIMESTAMP(3),
-    raw_data STRING,
-    processing_time AS PROCTIME()
-);
-
-CREATE TABLE silver (
-    event_id STRING,
-    user_id STRING,
-    event_type STRING,
-    event_timestamp TIMESTAMP(3),
-    raw_data STRING
-);
-
-
-
-SELECT hive_db.public."DBS"."NAME" AS database_name, hive_db.public."TBLS"."TBL_NAME" AS table_name, hive_db.public."SDS"."LOCATION" as path_hdfs
-FROM hive_db.public."TBLS"
-JOIN hive_db.public."DBS" ON hive_db.public."TBLS"."DB_ID" = hive_db.public."DBS"."DB_ID"
-JOIN hive_db.public."SDS" ON hive_db.public."TBLS"."SD_ID" = hive_db.public."SDS"."SD_ID";
-
--> cái này tạo vớ vẩn mà k có trong hms là đến lúc đọc ra k thấy gì  (mặc dù đã có thu mục trên minio)
-
 ./bin/flink run ./lib/paimon-flink-action-0.8.1.jar postgres_sync_table \
  --warehouse s3://10.208.164.167:9000/datalake/paimon1 \
  --database paimon_db  \
@@ -118,7 +71,7 @@ JOIN hive_db.public."SDS" ON hive_db.public."TBLS"."SD_ID" = hive_db.public."SDS
 
 ./bin/flink run ./lib/paimon-flink-action-0.8.1.jar postgres_sync_table \
    --classpath "file:///opt/flink/lib/paimon-s3-0.9.0.jar" \
- --warehouse s3://datalake/paimon1 \
+ --warehouse s3a://datalake/paimon1 \
  --database paimon_db  \
  --table paimon_table  \
  --primary_keys "id,age"  \
@@ -131,13 +84,24 @@ JOIN hive_db.public."SDS" ON hive_db.public."TBLS"."SD_ID" = hive_db.public."SDS
  --postgres_conf schema-name='public'  \
  --postgres_conf table-name='person'  \
  --postgres_conf slot.name='flink_paimon_cdc'     \
- --catalog_conf s3.endpoint=http://10.208.164.167:9000    \
- --catalog_conf s3.access-key=minio    \
- --catalog_conf s3.path.style.access=true   \
+ --catalog_conf s3a.endpoint=http://10.208.164.167:9000    \
+ --catalog_conf s3a.access-key=minio    \
+ --catalog_conf s3a.path.style.access=true   \
+ --catalog_conf s3a.secret-key=minio123   \
  --catalog_conf metastore=hive \
  --catalog_conf uri=thrift://10.208.164.167:9083  \
 
+Caused by: java.lang.RuntimeException: java.lang.ClassNotFoundException: Class org.apache.hadoop.fs.s3a.S3AFileSystem not found
 
+
+-> thiếu thư viện
+
+long@hello:/data/repo/my-images/014_paimon/docker$ docker cp ./jars/hadoop-aws-3.3.5.jar  jobmanager:/opt/flink/lib/hadoop-aws-3.3.5.jar 
+Successfully copied 762kB to jobmanager:/opt/flink/lib/hadoop-aws-3.3.5.jar
+long@hello:/data/repo/my-images/014_paimon/docker$ docker cp ./jars/hadoop-aws-3.3.5.jar  docker-taskmanager-1:/opt/flink/lib/hadoop-aws-3.3.5.jar 
+Successfully copied 762kB to docker-taskmanager-1:/opt/flink/lib/hadoop-aws-3.3.5.jar
+long@hello:/data/repo/my-images/014_paimon/docker$ docker cp ./jars/hadoop-aws-3.3.5.jar  docker-taskmanager-2:/opt/flink/lib/hadoop-aws-3.3.5.jar 
+Successfully copied 762kB to docker-taskmanager-2:/opt/flink/lib/hadoop-aws-3.3.5.jar
 
 --s3.access-key minio    \
  --s3.secret-key minio123    \
@@ -145,3 +109,65 @@ JOIN hive_db.public."SDS" ON hive_db.public."TBLS"."SD_ID" = hive_db.public."SDS
 
 
  MinIO sử dụng một endpoint giống S3, nhưng có thể bạn cần phải chỉ định path.style.access=true để phù hợp với cách MinIO hoạt động
+
+
+--warehouse s3a://10.208.164.167:9000/datalake/paimon1 \
+->  S3Guard is disabled on this bucket: 10.208.164.167. chứng tỏ chố warehouse này là điền buket rồi, không có ip
+
+
+./bin/flink run  \
+-Dfs.s3.endpoint=http://10.208.164.167:9000    \
+-Ds3.path.style.access=true   \
+-DAWS_ACCESS_KEY_ID=minio \
+-DAWS_SECRET_KEY=minio123 \
+./lib/paimon-flink-action-0.9.0.jar postgres_sync_table \
+--warehouse s3a://datalake/paimon1 \
+--database paimon_db  \
+--table paimon_table  \
+--primary_keys "id,age"  \
+--partition_keys "age"  \
+--postgres_conf hostname=10.208.164.167  \
+--postgres_conf port=5431  \
+--postgres_conf username=data_etl  \
+--postgres_conf password=data_etl  \
+--postgres_conf database-name='my_database'  \
+--postgres_conf schema-name='public'  \
+--postgres_conf table-name='person'  \
+--postgres_conf slot.name='flink_paimon_cdc'     \
+--catalog_conf metastore=hive \
+--catalog_conf uri=thrift://10.208.164.167:9083  
+
+-D s3.endpoint=http://10.208.164.167:9000    \
+-D s3.access-key=minio    \
+-D s3.path.style.access=true   \
+-D s3.secret-key=minio123   \
+
+
+-Ds3.access-key=minio    \
+-Ds3.secret-key=minio123   \
+
+
+root@ff6201e1d778:/opt/flink# tail -n 1000 log/flink--client-ff6201e1d778.log
+
+
+
+./bin/flink run  \
+./lib/paimon-flink-action-0.9.0.jar postgres_sync_table \
+--warehouse s3a://datalake/paimon1 \
+--database paimon_db  \
+--table paimon_table  \
+--primary_keys "id,age"  \
+--partition_keys "age"  \
+--postgres_conf hostname=10.208.164.167  \
+--postgres_conf port=5431  \
+--postgres_conf username=data_etl  \
+--postgres_conf password=data_etl  \
+--postgres_conf database-name='my_database'  \
+--postgres_conf schema-name='public'  \
+--postgres_conf table-name='person'  \
+--postgres_conf slot.name='flink_paimon_cdc'     \
+--catalog_conf metastore=hive \
+--catalog_conf uri=thrift://10.208.164.167:9083  
+
+
+

@@ -6,8 +6,8 @@ services:
     image: flink:1.20.0
     container_name: jobmanager
     environment:
-      - JOB_MANAGER_RPC_ADDRESS=jobmanager
-      - HADOOP_CLASSPATH='hadoop classpath'
+      # - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      # - HADOOP_CLASSPATH='hadoop classpath'
       # - AWS_ACCESS_KEY_ID=minio
       # - AWS_SECRET_ACCESS_KEY=minio123
       # - AWS_REGION=us-east-1
@@ -15,6 +15,17 @@ services:
       # - S3_ENDPOINT=http://10.208.164.167:9000
       # - S3_PATH_STYLE_ACCESS=true
       # - FLINK_LOG_LEVEL=DEBUG   -> ROOT_LOG_LEVEL ?
+      - 'NO_PROXY=localhost,127.0.0.1,10.208.164.167'
+      - 'no_proxy=localhost,127.0.0.1,10.208.164.167'
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2
+        fs.s3a.aws.credentials.provider: org.apache.flink.fs.s3.common.token.DynamicTemporaryAWSCredentialsProvider
+        s3.endpoint: http://10.208.164.167:9000
+        s3.path.style.access: true
+        s3.access-key: minio
+        s3.secret-key: minio123
     extra_hosts:
       - "hive-metastore:10.208.164.167"
     ports:
@@ -26,9 +37,10 @@ services:
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
       - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
-      - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
-      - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
+      # - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
+      # - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       - ./hive-site.xml:/opt/flink/conf/hive-site.xml
+      - ./log4j.properties:/opt/flink/conf/log4j.properties
     deploy:
           replicas: 1
     networks:
@@ -39,8 +51,8 @@ services:
   taskmanager:
     image: flink:1.20.0
     environment:
-      - JOB_MANAGER_RPC_ADDRESS=jobmanager
-      - HADOOP_CLASSPATH='hadoop classpath'
+      # - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      # - HADOOP_CLASSPATH='hadoop classpath'
       # - AWS_ACCESS_KEY_ID=minio
       # - AWS_SECRET_ACCESS_KEY=minio123
       # - AWS_REGION=us-east-1
@@ -48,6 +60,17 @@ services:
       # - S3_ENDPOINT=http://10.208.164.167:9000
       # - S3_PATH_STYLE_ACCESS=true
       # - FLINK_LOG_LEVEL=DEBUG
+      - 'NO_PROXY=localhost,127.0.0.1,10.208.164.167'
+      - 'no_proxy=localhost,127.0.0.1,10.208.164.167'
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2
+        fs.s3a.aws.credentials.provider: org.apache.flink.fs.s3.common.token.DynamicTemporaryAWSCredentialsProvider
+        s3.endpoint: http://10.208.164.167:9000
+        s3.path.style.access: true
+        s3.access-key: minio
+        s3.secret-key: minio123
     extra_hosts:
       - "hive-metastore:10.208.164.167"
     depends_on:
@@ -59,12 +82,13 @@ services:
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
       - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
-      - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
-      - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
+      # - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
+      # - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       - ./hive-site.xml:/opt/flink/conf/hive-site.xml
+      - ./log4j.properties:/opt/flink/conf/log4j.properties
     deploy:
           replicas: 2
-    networks:
+    networks: 
       - paimon-network
 
 networks:

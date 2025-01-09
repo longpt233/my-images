@@ -1,7 +1,7 @@
 <configuration>
     <property>
         <name>metastore.thrift.uris</name>
-        <value>thrift://hive-metastore:9083</value>
+        <value>thrift://0.0.0.0:9083</value>
         <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
     </property>
     <property>
@@ -35,6 +35,16 @@
 
 
     <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>s3a://paimonmetastore/warehouse</value>
+    </property>
+
+    <property>
+        <name>fs.s3a.impl</name>
+        <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+    </property>
+
+    <property>
         <name>fs.s3a.access.key</name>
         <value>minio</value>
     </property>
@@ -50,6 +60,8 @@
         <name>fs.s3a.path.style.access</name>
         <value>true</value>
     </property>
+
+    <!-- TODO HIVE_METASTORE_WAREHOUSE_DIR: s3://datalake/  -->
 
     <!-- Enable ACID support -->
     <property>

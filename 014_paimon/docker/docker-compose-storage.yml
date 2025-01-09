@@ -60,8 +60,26 @@ services:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
     command: server --console-address ":9001" /data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - my-network
+
+    # mc-init:
+    #   image: minio/mc
+    #   depends_on:
+    #     - minio
+    #   entrypoint: >
+    #     /bin/sh -c "
+    #     sleep 10 &&
+    #     mc alias set myminio http://minio:9000 minio minio123 &&
+    #     mc mb myminio/datalake || true
+    #     "
+    #   networks:
+    #     - my-network
 
 volumes:
   minio-data:

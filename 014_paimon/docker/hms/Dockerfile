@@ -32,6 +32,11 @@ COPY ./hms/entrypoint.sh /entrypoint.sh
 
 COPY ./hms/metastore-site.xml /opt/apache-hive-metastore-3.0.0-bin/conf/metastore-site.xml
 
+# COPY ./jars/hadoop-common-3.4.0.jar /opt/apache-hive-metastore-3.0.0-bin/lib/hadoop-common-3.4.0.jar
+
+# COPY ./jars/aws-java-sdk-1.12.461.jar /opt/apache-hive-metastore-3.0.0-bin/lib/aws-java-sdk-1.12.461.jar
+# vẫn bị MetaException(message:Got exception: org.apache.hadoop.fs.UnsupportedFileSystemException No FileSystem for scheme "s3")
+
 RUN groupadd -r hive --gid=1000 && \
     useradd -r -g hive --uid=1000 -d ${HIVE_HOME} hive && \
     chown hive:hive -R ${HIVE_HOME} && \
