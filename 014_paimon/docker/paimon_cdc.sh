@@ -153,7 +153,7 @@ root@ff6201e1d778:/opt/flink# tail -n 1000 log/flink--client-ff6201e1d778.log
 
 ./bin/flink run  \
 ./lib/paimon-flink-action-0.9.0.jar postgres_sync_table \
---warehouse s3a://datalake/paimon1 \
+--warehouse s3://paimon/warehouse \
 --database paimon_db  \
 --table paimon_table  \
 --primary_keys "id,age"  \
@@ -166,8 +166,89 @@ root@ff6201e1d778:/opt/flink# tail -n 1000 log/flink--client-ff6201e1d778.log
 --postgres_conf schema-name='public'  \
 --postgres_conf table-name='person'  \
 --postgres_conf slot.name='flink_paimon_cdc'     \
+
+
+
 --catalog_conf metastore=hive \
 --catalog_conf uri=thrift://10.208.164.167:9083  
 
 
+./bin/flink run  \
+-Dfs.s3.endpoint=http://10.208.164.167:9000    \
+-Ds3.path.style.access=true   \
+-DAWS_ACCESS_KEY_ID=minio \
+-DAWS_SECRET_KEY=minio123 \
+./lib/paimon-flink-action-0.9.0.jar postgres_sync_table \
+--warehouse s3://paimon/warehouse \
+--database paimon_db  \
+--table paimon_table  \
+--primary_keys "id,age"  \
+--partition_keys "age"  \
+--postgres_conf hostname=10.208.164.167  \
+--postgres_conf port=5431  \
+--postgres_conf username=data_etl  \
+--postgres_conf password=data_etl  \
+--postgres_conf database-name='my_database'  \
+--postgres_conf schema-name='public'  \
+--postgres_conf table-name='person'  \
+--postgres_conf slot.name='flink_paimon_cdc' 
+
+
+-> Missing required options are:
+
+s3.access-key
+s3.secret-key
+
+
+./bin/flink run  \
+-Ds3.endpoint=http://10.208.164.167:9000    \
+-Ds3.path.style.access=true   \
+-Ds3.access-key=minio \
+-Ds3.secret-key=minio123 \
+./lib/paimon-flink-action-0.9.0.jar postgres_sync_table \
+--warehouse s3://paimon/warehouse \
+--database paimon_db  \
+--table paimon_table  \
+--primary_keys "id,age"  \
+--partition_keys "age"  \
+--postgres_conf hostname=10.208.164.167  \
+--postgres_conf port=5431  \
+--postgres_conf username=data_etl  \
+--postgres_conf password=data_etl  \
+--postgres_conf database-name='my_database'  \
+--postgres_conf schema-name='public'  \
+--postgres_conf table-name='person'  \
+--postgres_conf slot.name='flink_paimon_cdc' 
+
+
+-> không set được  = flink 
+
+As explained on https://nightlies.apache.org/flink/flink-docs-stable/docs/deployment/filesystems/s3/#configure-access-credentials you should use IAM or Access Keys which you configure in flink-conf.yaml. You can't set the credentials in code, because the S3 plugins are loaded via plugins.
+
+nó bảo là có thể dùng được bằng spark nhưng mà flink thì chưa 
+
+sparkContext.hadoopConfiguration.set("fs.s3a.access.key","***")
+
+
+
+./bin/flink run  \
+./lib/paimon-flink-action-0.8.1.jar postgres_sync_table \
+--warehouse s3://paimon/warehouse \
+--database paimon_db  \
+--table paimon_table  \
+--primary_keys "id,age"  \
+--partition_keys "age"  \
+--postgres_conf hostname=10.208.164.167  \
+--postgres_conf port=5431  \
+--postgres_conf username=data_etl  \
+--postgres_conf password=data_etl  \
+--postgres_conf database-name='my_database'  \
+--postgres_conf schema-name='public'  \
+--postgres_conf table-name='person'  \
+--postgres_conf slot.name='flink_paimon_cdc'  \
+--postgres_conf decoding.plugin.name='pgoutput'
+
+
+-Dexecution.checkpointing.interval=<interval>
+https://paimon.apache.org/docs/1.0/cdc-ingestion/overview/#checkpointing
 

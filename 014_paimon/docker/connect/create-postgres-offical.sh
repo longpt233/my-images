@@ -22,7 +22,7 @@ postgres=#
 # tao bang 
 
 CREATE DATABASE my_database;
-
+\c my_database
 select * from person;
 truncate table person;
 drop  table person;
@@ -66,7 +66,29 @@ my_database=# \dRp+
 Tables:
     "public.person"
 
-my_database=# 
+my_database=# CREATE ROLE replication_group;
+CREATE ROLE
+my_database=# \d
+        List of relations
+ Schema |  Name  | Type  | Owner 
+--------+--------+-------+-------
+ public | person | table | admin
+(1 row)
+
+my_database=# GRANT replication_group TO admin;
+GRANT ROLE
+my_database=# GRANT replication_group TO data_etl;
+GRANT ROLE
+my_database=# ALTER TABLE public.person OWNER TO replication_group;
+ALTER TABLE
+my_database=# \d+
+                                         List of relations
+ Schema |  Name  | Type  |       Owner       | Persistence | Access method |  Size   | Description 
+--------+--------+-------+-------------------+-------------+---------------+---------+-------------
+ public | person | table | replication_group | permanent   | heap          | 0 bytes | 
+(1 row)
+
+# my_database=# GRANT CONNECT ON DATABASE my_database TO data_etl;
 
 
 my_database=> SELECT * FROM pg_publication_tables;

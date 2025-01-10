@@ -21,23 +21,23 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
-      - note=cau_hinh_nay_de_trong_luc_tao_catalog
-        # fs.s3a.aws.credentials.provider: org.apache.flink.fs.s3.common.token.DynamicTemporaryAWSCredentialsProvider
-        # s3.endpoint: http://10.208.164.167:9000
-        # s3.path.style.access: true
-        # s3.access-key: minio
-        # s3.secret-key: minio123
+        fs.s3a.endpoint: http://10.208.164.167:9000
+        fs.s3a.path.style.access: true
+        fs.s3a.access.key: minio
+        fs.s3a.secret.key: minio123
     extra_hosts:
       - "hive-metastore:10.208.164.167"
     ports:
       - "8081:8081"
     command: jobmanager
     volumes:
+    # lib cdc
       - ./jars/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar:/opt/flink/lib/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar
-      - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
+    # lib s3
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
-      - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
+      - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
+      # - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
       # - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
       # - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       # - ./hive-site.xml:/opt/flink/conf/hive-site.xml
@@ -67,23 +67,23 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
-      - a=b
-        # fs.s3a.aws.credentials.provider: org.apache.flink.fs.s3.common.token.DynamicTemporaryAWSCredentialsProvider
-        # s3.endpoint: http://10.208.164.167:9000
-        # s3.path.style.access: true
-        # s3.access-key: minio
-        # s3.secret-key: minio123
+        fs.s3a.endpoint: http://10.208.164.167:9000
+        fs.s3a.path.style.access: true
+        fs.s3a.access.key: minio
+        fs.s3a.secret.key: minio123
     extra_hosts:
       - "hive-metastore:10.208.164.167"
     depends_on:
       - jobmanager
     command: taskmanager
     volumes:
+    # lib cdc
       - ./jars/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar:/opt/flink/lib/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar
-      - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
+    # lib s3
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
-      - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
+      - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
+      # - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
       # - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
       # - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       # - ./hive-site.xml:/opt/flink/conf/hive-site.xml

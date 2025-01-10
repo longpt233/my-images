@@ -4,9 +4,23 @@
 
 # paimon-flink-action-0.9.0.jar aws-java-sdk-1.12.461.jar hadoop-common-3.4.0.jar hadoop-aws-3.1.4.jar aws-java-sdk-bundle-1.11.901.jar
 
-FILES = 
+FILES = paimon-flink-action-0.8.1.jar flink-sql-connector-postgres-cdc-3.1.1.jar
 
 
+# hadoop-common-3.4.0.jar hadoop-aws-3.1.4.jar aws-java-sdk-bundle-1.11.901.jar guava-31.0.1-jre.jar
+
+connector-create:
+	@curl -X POST localhost:8083/connectors -H "Content-Type: application/json" -d @./connect/source-postgres.json
+
+connector-status:
+	@curl -i -X GET -H "Accept:application/json" localhost:8083/connectors/dwh.mydatabase.person/status
+
+connector-reset:
+	@curl -i -X POST -H "Accept:application/json" localhost:8083/connectors/dwh.mydatabase.person/restart
+	# restart khong an thua, tot nhat la xoa di tao lai
+
+connector-remove:
+	@curl -i -X DELETE  localhost:8083/connectors/dwh.mydatabase.person
 
 build: 
 	@docker build -f ./hms/Dockerfile -t longpt233/hms:0.0.1 .
@@ -51,12 +65,20 @@ change:
 	# docker cp apt.conf docker-taskmanager-1:/etc/apt/apt.conf.d/10apt.conf
 
 
-	# docker exec jobmanager bash -c "chmod 775 /opt/flink/lib/*"
-	# docker exec docker-taskmanager-1 bash -c "chmod 775 /opt/flink/lib/*"
-	# docker exec docker-taskmanager-2 bash -c "chmod 775 /opt/flink/lib/*"
-	# docker exec jobmanager bash -c "chown flink:flink /opt/flink/lib/*"
-	# docker exec docker-taskmanager-1 bash -c "chown flink:flink /opt/flink/lib/*"
-	# docker exec docker-taskmanager-2 bash -c "chown flink:flink /opt/flink/lib/*"
+	docker exec jobmanager bash -c "chmod 775 /opt/flink/lib/*"
+	docker exec docker-taskmanager-1 bash -c "chmod 775 /opt/flink/lib/*"
+	docker exec docker-taskmanager-2 bash -c "chmod 775 /opt/flink/lib/*"
+	docker exec jobmanager bash -c "chown flink:flink /opt/flink/lib/*"
+	docker exec docker-taskmanager-1 bash -c "chown flink:flink /opt/flink/lib/*"
+	docker exec docker-taskmanager-2 bash -c "chown flink:flink /opt/flink/lib/*"
+
+
+	docker exec jobmanager bash -c           "chmod 775 /opt/flink/plugins/*"
+	docker exec docker-taskmanager-1 bash -c "chmod 775 /opt/flink/plugins/*"
+	docker exec docker-taskmanager-2 bash -c "chmod 775 /opt/flink/plugins/*"
+	docker exec jobmanager bash -c           "chown flink:flink /opt/flink/plugins/*"
+	docker exec docker-taskmanager-1 bash -c "chown flink:flink /opt/flink/plugins/*"
+	docker exec docker-taskmanager-2 bash -c "chown flink:flink /opt/flink/plugins/*"
 
 
 	# docker exec jobmanager bash -c "chmod 775 /opt/flink/conf/*"
@@ -77,5 +99,9 @@ change:
 	# docker exec jobmanager bash -c "rm -f  /opt/flink/lib/paimon-flink-action-0.8.1.jar"
 	# docker exec docker-taskmanager-1 bash -c "rm -f   /opt/flink/lib/paimon-flink-action-0.8.1.jar"
 	# docker exec docker-taskmanager-2 bash -c "rm -f  /opt/flink/lib/paimon-flink-action-0.8.1.jar"
+
+	docker exec jobmanager bash -c "rm -f  /opt/flink/lib/paimon-flink-action-0.9.0.jar"
+	docker exec docker-taskmanager-1 bash -c "rm -f   /opt/flink/lib/paimon-flink-action-0.9.0.jar"
+	docker exec docker-taskmanager-2 bash -c "rm -f  /opt/flink/lib/paimon-flink-action-0.9.0.jar"
 
 
