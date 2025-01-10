@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   postgres:
-    image: 'postgres:15'
+    image: 'postgres:14'
     hostname: postgres
     expose:
       - '5432'
@@ -23,6 +23,7 @@ services:
       -c max_wal_senders=10 
       -c max_replication_slots=10 
       -c hot_standby_feedback=on
+      -c log_statement=all
     # healthcheck:
     #   test: [ 'CMD', 'psql', '-U', 'postgres', '-c', 'SELECT 1' ]
     #   interval: 10s
@@ -52,18 +53,18 @@ services:
     networks:
       - my-network
 
-  # mc-init:
-  #   image: minio/mc
-  #   depends_on:
-  #     - minio
-  #   entrypoint: >
-  #     /bin/sh -c "
-  #     sleep 10 &&
-  #     mc alias set myminio http://minio:9000 minio minio123 &&
-  #     mc mb myminio/hive || true 
-  #     "
-  #   networks:
-  #     - my-network
+  mc-init:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10 &&
+      mc alias set myminio http://minio:9000 minio minio123 &&
+      mc mb myminio/paimon || true 
+      "
+    networks:
+      - my-network
 
 volumes:
   minio-data:

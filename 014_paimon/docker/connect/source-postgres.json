@@ -24,6 +24,6 @@
         "snapshot.mode": "never",
         "slot.name": "debezium_person",
         "publication.autocreate.mode": "filtered",
-        "publication.name": "dbz_pub"
+        "publication.name": "dbz_publication"
     }
 }

@@ -3,7 +3,7 @@ version: "3"
 services:
  # Flink Job Manager
   jobmanager:
-    image: flink:1.20.0
+    image: flink:1.20
     container_name: jobmanager
     environment:
       # - JOB_MANAGER_RPC_ADDRESS=jobmanager
@@ -34,11 +34,11 @@ services:
     # lib cdc
       - ./jars/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar:/opt/flink/lib/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
+      - ./jars/flink-sql-connector-postgres-cdc-3.2.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.2.1.jar
     # lib s3
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
       - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
       # - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
-      # - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
       # - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       # - ./hive-site.xml:/opt/flink/conf/hive-site.xml
       - ./log4j.properties:/opt/flink/conf/log4j.properties
@@ -50,7 +50,7 @@ services:
   
 
   taskmanager:
-    image: flink:1.20.0
+    image: flink:1.20
     environment:
       # - JOB_MANAGER_RPC_ADDRESS=jobmanager
       # - HADOOP_CLASSPATH='hadoop classpath'
@@ -80,11 +80,11 @@ services:
     # lib cdc
       - ./jars/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar:/opt/flink/lib/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar
       - ./jars/paimon-flink-1.20-0.9.0.jar:/opt/flink/lib/paimon-flink-1.20-0.9.0.jar
+      - ./jars/flink-sql-connector-postgres-cdc-3.2.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.2.1.jar
     # lib s3
       - ./jars/paimon-s3-0.9.0.jar:/opt/flink/lib/paimon-s3-0.9.0.jar
       - ./jars/flink-s3-fs-hadoop-1.20.0.jar:/opt/flink/plugins/s3-fs-hadoop/flink-s3-fs-hadoop-1.20.0.jar
       # - ./jars/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar:/opt/flink/lib/flink-sql-connector-hive-3.1.3_2.12-1.20.0.jar
-      # - ./jars/flink-sql-connector-postgres-cdc-3.0.1.jar:/opt/flink/lib/flink-sql-connector-postgres-cdc-3.0.1.jar
       # - ./jars/paimon-flink-action-0.8.1.jar:/opt/flink/lib/paimon-flink-action-0.8.1.jar
       # - ./hive-site.xml:/opt/flink/conf/hive-site.xml
       - ./log4j.properties:/opt/flink/conf/log4j.properties

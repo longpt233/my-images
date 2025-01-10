@@ -232,8 +232,27 @@ sparkContext.hadoopConfiguration.set("fs.s3a.access.key","***")
 
 
 ./bin/flink run  \
-./lib/paimon-flink-action-0.8.1.jar postgres_sync_table \
+./lib/paimon-flink-action-0.9.0.jar postgres_sync_table \
 --warehouse s3://paimon/warehouse \
+--database paimon_db  \
+--table paimon_table  \
+--primary_keys "id"  \
+--postgres_conf hostname=10.208.164.167  \
+--postgres_conf port=5431  \
+--postgres_conf username=data_etl  \
+--postgres_conf password=data_etl  \
+--postgres_conf database-name='my_database'  \
+--postgres_conf schema-name='public'  \
+--postgres_conf table-name='person'  \
+--postgres_conf slot.name='flink_paimon_cdc'  \
+--postgres_conf decoding.plugin.name='pgoutput'
+
+--partition_keys "age"  \
+
+
+./bin/flink run  \
+./lib/paimon-flink-action-0.8.1.jar postgres_sync_table \
+--warehouse hdfs://10.208.164.172:9000/test \
 --database paimon_db  \
 --table paimon_table  \
 --primary_keys "id,age"  \
@@ -242,6 +261,23 @@ sparkContext.hadoopConfiguration.set("fs.s3a.access.key","***")
 --postgres_conf port=5431  \
 --postgres_conf username=data_etl  \
 --postgres_conf password=data_etl  \
+--postgres_conf database-name='my_database'  \
+--postgres_conf schema-name='public'  \
+--postgres_conf table-name='person'  \
+--postgres_conf slot.name='flink_paimon_cdc'  \
+--postgres_conf decoding.plugin.name='pgoutput'
+
+
+./bin/flink run  \
+./lib/paimon-flink-action-0.8.1.jar postgres_sync_table \
+--warehouse hdfs://10.208.164.172:9000/test \
+--database paimon_db  \
+--table paimon_table  \
+--primary_keys "id"  \
+--postgres_conf hostname=10.208.164.167  \
+--postgres_conf port=5431  \
+--postgres_conf username=admin  \
+--postgres_conf password=admin  \
 --postgres_conf database-name='my_database'  \
 --postgres_conf schema-name='public'  \
 --postgres_conf table-name='person'  \
