@@ -18,7 +18,7 @@
     </property>
     <property>
         <name>javax.jdo.option.ConnectionURL</name>
-        <value>jdbc:postgresql://postgres:5432/hive_db</value>
+        <value>jdbc:postgresql://10.208.164.167:5431/hive_db</value>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionUserName</name>
@@ -36,12 +36,23 @@
 
     <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>s3a://paimonmetastore/warehouse</value>
+        <value>s3a://hive/warehouse</value>
     </property>
 
     <property>
         <name>fs.s3a.impl</name>
         <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+    </property>
+
+    <!-- <property>
+        <name>fs.s3a.connection.ssl.enabled</name>
+        <value>true</value>
+    </property> -->
+
+    <property>
+        <name>metastore.task.threads.always</name>
+        <value>org.apache.hadoop.hive.metastore.events.EventCleanerTask</value>
+        <description>bản hms 3.1.2 bị lỗi  MaterializationsCacheCleanerTask class not found không lên được chắc là cần config này. https://stackoverflow.com/questions/75905954/hive-meta-store-in-docker</description>
     </property>
 
     <property>
@@ -54,7 +65,7 @@
     </property>
     <property>
         <name>fs.s3a.endpoint</name>
-        <value>http://minio:9000</value>
+        <value>http://10.208.164.167:9000</value>
     </property>
     <property>
         <name>fs.s3a.path.style.access</name>

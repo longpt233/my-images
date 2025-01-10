@@ -56,3 +56,4 @@ mongodb/data
 
 014_paimon/docker/*jar
 014_paimon/docker/jars/*jar
+014_paimon/docker/hadoop-3.2.0.tar.gz

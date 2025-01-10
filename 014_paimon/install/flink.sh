@@ -1,8 +1,15 @@
 
-    log4j-cli.properties: used by the command line interface (e.g., flink run, sql-client)
-    log4j-session.properties: used by the command line interface when starting a Kubernetes/Yarn session cluster (i.e., kubernetes-session.sh/yarn-session.sh)
-    log4j-console.properties: used for Job-/TaskManagers if they are run in the foreground (e.g., Kubernetes)
-    log4j.properties: used for Job-/TaskManagers by default
+
+log4j-cli.properties.sql-client
+log4j-console.properties.sql-submit.ui-log-job
+log4j.properties.cluster
+
+
+
+log4j-cli.properties: used by the command line interface (e.g., flink run, sql-client)
+log4j-session.properties: used by the command line interface when starting a Kubernetes/Yarn session cluster (i.e., kubernetes-session.sh/yarn-session.sh)
+log4j-console.properties: used for Job-/TaskManagers if they are run in the foreground (e.g., Kubernetes)
+log4j.properties: used for Job-/TaskManagers by default
 
 
 chán, log flink run phải set trong log4j-cli.properties

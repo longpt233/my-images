@@ -18,7 +18,7 @@
 
   <property>
     <name>fs.s3a.secret.key</name>
-    <value>minio123</value>
+    <value>minio12322</value>
   </property>
 
   <property>
@@ -31,14 +31,19 @@
     <value>true</value>
   </property>
 
-    <property>
+  <property>
+  <name>fs.s3a.create.directory.marker</name>
+  <value>true</value>
+</property>
+
+    <!-- <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>s3://paimonmetastore/warehouse</value>
+        <value>s3a://hive/warehouse</value>
     </property>
 
     <property>
         <name>fs.s3a.impl</name>
         <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
-    </property>
+    </property> -->
 
 </configuration>

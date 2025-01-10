@@ -22,6 +22,11 @@ bash-5.1# mc ls myminio/paimonmetastore/
 [2025-01-09 01:39:16 UTC]     0B warehouse/
 
 
+DBS -> db location 
+SDS -> table location
+COLUMNS_V2 
+TBLS
+
 
 Flink SQL> CREATE DATABASE medallion;
 
