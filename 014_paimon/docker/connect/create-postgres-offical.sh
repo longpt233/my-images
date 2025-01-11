@@ -114,11 +114,10 @@ debezium_person -> laf slot name trong cau hinh dbz
 # two hexadecimal numbers separated by a slash, e.g. 16/B374D848
 
 # debezium dùng replication slot and publications để read từ WAL
-
 # + publications là cơ chế chuyển stream change tới một thằng consumer (ở đây là debezium). có thể chỉ định (LỰA CHỌN được) publications trên bảng nào, cột nào, các action nào (DML (Data Manipulation Language) - khác với DDL (Data Definition Language))
 # nếu cho debezium quyền này thì mình có thể cấu hình lựa chọn bên phía debezium
-
-# + Replication slots
+# + Replication slots: là một kết nối cho consumer (như debezium) đến để lấy stream dữ liệu -> nó là thằng lưu LSN xem consumer đã đọc đến đâu rồi + lượng dữ liệu đã đọc. 
+# giống như kiểu consumer group
 
 
 # WAL LEVEL
@@ -127,6 +126,30 @@ debezium_person -> laf slot name trong cau hinh dbz
 # minimal: chỉ dữ lại log đủ để khôi phục khi crash hoặc immediate shutdown. không đủ để recover point-in-time
 # replica (default) : WAL archiving and replication. đi kèm max_wal_senders >0 . trước 9.6 thì là tương đương archive hoặc hot_standby.
 # logical: support thêm logical decoding (logical change). increase the WAL volume
+
+
+# minimal   replica -> all            logical  -> đồng bộ dữ liệu tới từng table
+#           streaming replication     logical replication
+
+# logic là ở mặt user có thể tương tác được >< physic là đối tượng liên quan về vật lí (disk)  -> chính là wal_level replica hay còn gọi là streaming replication
+# dùng logic để có thể muốn rep custom một bảng nào đó thôi chứ k rep hết 
+# nên khi dùng với debezium nó sẽ báo lỗi wal_level=replica -> WARNING:  wal_level is insufficient to publish logical changes
+# vì debe nó cần thông tin cdc bảng nào
+
+
+# LOGICAL REPLICATION
+# cơ chế: 
+# thay đổi bảng A  -> WAL -> logical decode WAL trên A về sql và gửi đi 
+#                            [qua trình sinh sql này là publication]          -> subscription nhận thì là việc của sub (ví dụ như debezium)
+
+# ví dụ https://dangxuanduy.com/database/cau-hinh-logical-replication-trong-postgresql/
+# db nguồn
+# CREATE PUBLICATION pub;
+# ALTER PUBLICATION pub ADD TABLE public.khach_hang;
+# db đích
+# cũng phải tạo bảng CREATE TABLE public.khach_hang (...)
+# CREATE SUBSCRIPTION sub CONNECTION 'host=10.239.43.106 port=5432 password=Abcd1234 user=replica dbname=prod' PUBLICATION pub;
+
 my_database=> select * from pg_settings where name ='wal_level';
    name    | setting | unit |          category          |                    short_desc                     | extra_desc |  context   | vartype |    source    | min_val | max_val |         enumvals          | boot_val | reset_val | sourcefile | sourceline | pending_restart 
 -----------+---------+------+----------------------------+---------------------------------------------------+------------+------------+---------+--------------+---------+---------+---------------------------+----------+-----------+------------+------------+-----------------

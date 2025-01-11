@@ -15,6 +15,7 @@ services:
       # - S3_ENDPOINT=http://10.208.164.167:9000
       # - S3_PATH_STYLE_ACCESS=true
       # - FLINK_LOG_LEVEL=DEBUG   -> ROOT_LOG_LEVEL ?
+      # https://www.decodable.co/blog/troubleshooting-flink-sql-s3-problems -> bypass fs.s3a.access.key ???????
       - 'NO_PROXY=localhost,127.0.0.1,10.208.164.167'
       - 'no_proxy=localhost,127.0.0.1,10.208.164.167'
       - |

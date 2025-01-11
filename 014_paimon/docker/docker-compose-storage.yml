@@ -15,7 +15,7 @@ services:
     # wal_level=replica -> WARNING:  wal_level is insufficient to publish logical changes
     # trong doc nó cx bảo là phải set về logical
     # wal_level determines how much information is written to the WAL
-    # minimal -> replica (default) -> logical (thêm decode để làm gì nhỉ)
+    # minimal -> replica (default) -> logical (thêm decode để làm gì nhỉ -> để có thể biết thông tin trong trường hợp mình chỉ muốn rep 1 phần)
     command: |
       postgres 
       -c wal_level=logical 

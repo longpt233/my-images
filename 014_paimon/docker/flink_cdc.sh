@@ -1,5 +1,7 @@
 
+https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/postgres-cdc/
 
+https://github.com/gordonmurray/apache_flink_paimon_and_seatunnel/blob/main/jobs/job.sql
 
 
 CREATE TABLE topic_products (
@@ -95,6 +97,10 @@ CREATE temporary TABLE person1 (
   'slot.name' = 'flink',
   'decoding.plugin.name'= 'pgoutput'
 );
+
+
+
+# -> không ghi ra s3 : kiểm tra checkpoint https://github.com/apache/paimon/issues/2263
 
 SET 'execution.checkpointing.interval' = '1 s';
 
