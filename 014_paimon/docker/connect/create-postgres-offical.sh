@@ -159,7 +159,7 @@ my_database=> select * from pg_settings where name ='wal_level';
 
 
 khi thêm dữ liệu -> tăng byte lên nè
-my_database=> INSERT INTO person (id, name, age) VALUES (1221,'John Doe', 30);
+my_database=> INSERT INTO person (id, name, age) VALUES (121,'John Doe', 30);
 INSERT 0 1
 my_database=> SELECT * FROM pg_stat_replication_slots;
     slot_name    | spill_txns | spill_count | spill_bytes | stream_txns | stream_count | stream_bytes | total_txns | total_bytes | stats_reset 
